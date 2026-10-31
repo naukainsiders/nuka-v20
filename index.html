@@ -1136,7 +1136,7 @@ Check your Browserslist config to be sure that your targets are set up correctly
     if(children)children.textContent=String(filter.children||0);
     var checkin=document.getElementById('nk-search-checkin'),checkout=document.getElementById('nk-search-checkout');
     if(checkin)checkin.textContent=formatSearchDate(filter.start);
-    if(checkout)checkout.textContent=filter.mode==='day'?'Same day':formatSearchDate(filter.checkout);
+    if(checkout)checkout.textContent=filter.mode==='day'?'Day Cruise selected':formatSearchDate(filter.checkout);
     var summary=document.getElementById('nk-search-guest-summary');
     if(summary){var a=Number(filter.adults||2),c=Number(filter.children||0);summary.textContent=a+' Adult'+(a===1?'':'s')+(c?' · '+c+' Child'+(c===1?'':'ren'):'')}
   }
@@ -8542,10 +8542,10 @@ document.addEventListener('visibilitychange',chk);window.addEventListener('focus
     window.nkChangeSearchGuest=function(kind,delta){const el=document.getElementById(kind==='adults'?'nk-search-adults':'nk-search-children');if(!el)return;el.textContent=String(Math.min(kind==='adults'?12:10,Math.max(kind==='adults'?1:0,Number(el.textContent||0)+delta)));const a=Number(document.getElementById('nk-search-adults')?.textContent||2),ch=Number(document.getElementById('nk-search-children')?.textContent||0);document.getElementById('nk-search-guest-summary').textContent=a+' Adult'+(a===1?'':'s')+(ch?' · '+ch+' Child'+(ch===1?'':'ren'):'');saveLandingPreferences()};
     const priorPick=window.pickCalendarDate;if(priorPick&&!priorPick.__nkSearchHook){const wrapped=function(){const result=priorPick.apply(this,arguments);if(result&&typeof result.then==='function')return result.then(v=>{syncHomeSearchDates();saveLandingPreferences();return v});syncHomeSearchDates();saveLandingPreferences();return result};wrapped.__nkSearchHook=true;window.pickCalendarDate=wrapped}
     document.addEventListener('click',e=>{const p=document.getElementById('nk-search-guest-panel'),b=document.getElementById('nk-search-guest-toggle');if(p&&!p.hidden&&!p.contains(e.target)&&!b?.contains(e.target)){p.hidden=true;b?.setAttribute('aria-expanded','false')}});
-    const original=window.openBookingModal;if(original&&!original.__nkSearchHook){const wrapped=function(){const result=original.apply(this,arguments),f=window.nkHomeFilter;if(f&&state.selectedProperty){const set=(id,value)=>{const el=document.getElementById(id);if(el)el.value=value};set('booking-date',f.start);set('booking-checkout',f.checkout);set('booking-adults',f.adults);set('booking-children',f.children);const nights=f.mode==='day'?1:Math.max(1,Math.round((new Date(f.checkout+'T00:00:00')-new Date(f.start+'T00:00:00'))/86400000));set('booking-nights',nights);const dateHelp=document.querySelector('#nk-booking-date-help span');if(dateHelp)dateHelp.textContent='Dates selected from your search. You can change either date before continuing.';const fmtDate=x=>new Date(x+'T00:00:00').toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});document.getElementById('nk-checkin-display').textContent=fmtDate(f.start);document.getElementById('nk-checkout-display').textContent=f.mode==='day'?'Same day':fmtDate(f.checkout);document.getElementById('booking-adults-display').textContent=f.adults;document.getElementById('booking-children-display').textContent=f.children;window.nkCruiseMode=f.mode;window.nkBookingMode=f.mode;window.updatePriceSummary?.()}return result};wrapped.__nkSearchHook=true;window.openBookingModal=wrapped}
+    const original=window.openBookingModal;if(original&&!original.__nkSearchHook){const wrapped=function(){const result=original.apply(this,arguments),f=window.nkHomeFilter;if(f&&state.selectedProperty){const set=(id,value)=>{const el=document.getElementById(id);if(el)el.value=value};set('booking-date',f.start);set('booking-checkout',f.checkout);set('booking-adults',f.adults);set('booking-children',f.children);const nights=f.mode==='day'?1:Math.max(1,Math.round((new Date(f.checkout+'T00:00:00')-new Date(f.start+'T00:00:00'))/86400000));set('booking-nights',nights);const dateHelp=document.querySelector('#nk-booking-date-help span');if(dateHelp)dateHelp.textContent='Dates selected from your search. You can change either date before continuing.';const fmtDate=x=>new Date(x+'T00:00:00').toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});document.getElementById('nk-checkin-display').textContent=fmtDate(f.start);document.getElementById('nk-checkout-display').textContent=f.mode==='day'?'Day Cruise selected':fmtDate(f.checkout);document.getElementById('booking-adults-display').textContent=f.adults;document.getElementById('booking-children-display').textContent=f.children;window.nkCruiseMode=f.mode;window.nkBookingMode=f.mode;window.updatePriceSummary?.()}return result};wrapped.__nkSearchHook=true;window.openBookingModal=wrapped}
     window.nkCruiseMode='overnight';window.nkBookingMode='overnight';syncHomeSearchDates();
   }
-  function syncHomeSearchDates(){const start=document.getElementById('booking-date')?.value||'',end=document.getElementById('booking-checkout')?.value||'',fmt=iso=>{if(!iso)return 'Choose date';const [y,m,d]=iso.split('-').map(Number);return new Date(y,m-1,d).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})};const a=document.getElementById('nk-search-checkin'),b=document.getElementById('nk-search-checkout');if(a)a.textContent=fmt(start);if(b)b.textContent=(window.nkBookingMode||window.nkCruiseMode)==='day'&&start?'Same day':fmt(end)}
+  function syncHomeSearchDates(){const start=document.getElementById('booking-date')?.value||'',end=document.getElementById('booking-checkout')?.value||'',fmt=iso=>{if(!iso)return 'Choose date';const [y,m,d]=iso.split('-').map(Number);return new Date(y,m-1,d).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})};const a=document.getElementById('nk-search-checkin'),b=document.getElementById('nk-search-checkout');if(a)a.textContent=fmt(start);if(b)b.textContent=(window.nkBookingMode||window.nkCruiseMode)==='day'&&start?'Day Cruise selected':fmt(end)}
   function saveLandingPreferences(){const start=document.getElementById('booking-date')?.value||'';if(!start)return;const mode=document.getElementById('nk-search-experience')?.value||window.nkBookingMode||'overnight',checkout=mode==='day'?start:(document.getElementById('booking-checkout')?.value||''),adults=Number(document.getElementById('nk-search-adults')?.textContent||2),children=Number(document.getElementById('nk-search-children')?.textContent||0);window.nkLandingPreferences={start,checkout,mode,adults,children,guests:adults+children}}
   function renderSmartSuggestions(){
     const target=document.getElementById('nk-smart-suggestion-list');
@@ -9134,7 +9134,7 @@ document.addEventListener('visibilitychange',chk);window.addEventListener('focus
     if(picker){picker.classList.add('nk-date-range-error');setTimeout(()=>picker.classList.remove('nk-date-range-error'),1800)}
   }
   function nkSameDayCheckoutNotice(){
-    const message='You have choosen for a same day pickup/drop-off ride.';
+    const message='You have chosen a DAY CRUISE with Same Day Return.';
     if(typeof window.toast==='function')window.toast(message,true);
     nkBookingDateError(message);
   }
@@ -9142,7 +9142,7 @@ document.addEventListener('visibilitychange',chk);window.addEventListener('focus
     const start=document.getElementById('booking-date')?.value||'',end=document.getElementById('booking-checkout')?.value||'';
     const startDisplay=document.getElementById('nk-checkin-display'),endDisplay=document.getElementById('nk-checkout-display');
     if(startDisplay)startDisplay.textContent=start?fmtLong(start):'Choose date';
-    if(endDisplay)endDisplay.textContent=nkIsDayBooking()&&start?'Same day':(end?fmtLong(end):'Choose date');
+    if(endDisplay)endDisplay.textContent=nkIsDayBooking()&&start?'Day Cruise selected':(end?fmtLong(end):'Choose date');
     const inTab=document.getElementById('nk-checkin-tab'),outTab=document.getElementById('nk-checkout-tab');
     const dayBooking=nkIsDayBooking();
     if(outTab){
@@ -15597,7 +15597,7 @@ body:has(#view-login.active){max-width:none!important;margin-left:0!important;ma
       if (!cell) return;
       const isCheckout = cell === root.querySelector('.nkt-cell:last-child');
       if (isCheckout && mode() === 'day') {
-        const message = 'You have chosen the DAY CRUISE. Checkout is the same day.';
+        const message = 'You have chosen the DAY CRUISE. Same Day Return selected.';
         setMsg(message);
         if (typeof window.nkShowCruiseChoiceToast === 'function') window.nkShowCruiseChoiceToast('You have chosen the DAY CRUISE.');
         cell.classList.remove('nk-day-cruise-error');
@@ -15791,12 +15791,12 @@ body:has(#view-login.active){max-width:none!important;margin-left:0!important;ma
     $('nkt-out-label').textContent = day ? 'Return' : 'Check-out';
     const inEl = $('nkt-in'), outEl = $('nkt-out');
     inEl.textContent = T.in ? fmt(T.in) : 'Choose date'; inEl.classList.toggle('on', !!T.in);
-    outEl.textContent = day ? 'Same day' : (T.out ? fmt(T.out) : 'Choose date'); outEl.classList.toggle('on', day || !!T.out);
+    outEl.textContent = day ? 'Day Cruise selected' : (T.out ? fmt(T.out) : 'Choose date'); outEl.classList.toggle('on', day || !!T.out);
     const outCell = document.querySelector('#nkt .nkt-cell:last-child');
     if (outCell) {
       outCell.classList.toggle('nk-day-cruise-locked', day);
       outCell.setAttribute('aria-disabled', String(day));
-      outCell.title = day ? 'Day Cruise returns on the same day' : 'Choose a check-out date';
+      outCell.title = day ? 'Same Day Return' : 'Choose a check-out date';
     }
     paintCal(); estimate();
   }
@@ -15820,7 +15820,7 @@ body:has(#view-login.active){max-width:none!important;margin-left:0!important;ma
     const format = iso => { if (!iso) return 'Choose date'; const [y,m,d] = iso.split('-').map(Number); return new Date(y,m-1,d).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}); };
     const checkin = $('nk-search-checkin'), checkoutLabel = $('nk-search-checkout');
     if (checkin) checkin.textContent = format(T.in);
-    if (checkoutLabel) checkoutLabel.textContent = selectedMode === 'day' ? 'Same day' : format(T.out);
+    if (checkoutLabel) checkoutLabel.textContent = selectedMode === 'day' ? 'Day Cruise selected' : format(T.out);
     const adults = $('nk-search-adults'), children = $('nk-search-children'), summary = $('nk-search-guest-summary');
     if (adults) adults.textContent = String(T.adults);
     if (children) children.textContent = String(T.children);
@@ -16356,7 +16356,7 @@ body:has(#view-login.active){max-width:none!important;margin-left:0!important;ma
     backdrop-filter:blur(2.5px); -webkit-backdrop-filter:blur(2.5px);
   }
   #nkt .nkt-cell.nk-day-cruise-locked::after {
-    content:"DAY CRUISE"; position:absolute; right:10px; top:9px; z-index:1; padding:4px 6px;
+    content:"SAME DAY RETURN!"; position:absolute; right:10px; top:9px; z-index:1; padding:4px 6px;
     border:1px solid rgba(13,79,60,.1); border-radius:999px; color:#71857b; background:rgba(255,255,255,.58);
     font:800 .48rem/1 'Plus Jakarta Sans',sans-serif; letter-spacing:.08em; opacity:.9;
   }
