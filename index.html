@@ -821,7 +821,6 @@
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 </style>
-
 <!-- Retired launch quote animation kept inert so it cannot run during auth or app boot. -->
 <script id="nauka-retired-launch-splash" type="text/plain">(function(){
   // The legacy quote image is intentionally retired. Keep this dormant compatibility
@@ -16363,4 +16362,99 @@ body:has(#view-login.active){max-width:none!important;margin-left:0!important;ma
   #nkt .nkt-cell.nk-day-cruise-error { animation:nkDayCruiseDateError .35s ease both; }
   @keyframes nkDayCruiseDateError { 0%,100%{transform:translateX(0)} 30%{transform:translateX(-3px)} 70%{transform:translateX(3px)} }
   @media (prefers-reduced-motion:reduce) { #nkt .nkt-cell.nk-day-cruise-error { animation:none; } }
+</style>
+<style id="nk-premium-search-controls-final">
+  /* Final cascade for the landing search: separate themed controls instead of
+     one flat white strip. */
+  #nk-home-search .nk-search-fields {
+    gap: 10px!important;
+    border: 0!important;
+    background: transparent!important;
+  }
+  #nk-home-search .nk-search-field {
+    border: 1px solid rgba(255,255,255,.86)!important;
+    border-radius: 18px!important;
+    background: linear-gradient(145deg,rgba(255,255,255,.92),rgba(235,246,239,.86))!important;
+    box-shadow: 0 8px 20px rgba(27,70,54,.08),inset 0 1px 0 rgba(255,255,255,.96)!important;
+    padding: 13px 16px!important;
+  }
+  #nk-home-search .nk-search-dates {
+    background: linear-gradient(145deg,rgba(245,251,247,.97),rgba(223,240,229,.9))!important;
+    border-color: rgba(95,157,120,.24)!important;
+    padding: 10px!important;
+  }
+  #nk-home-search .nk-search-date {
+    padding: 9px 11px!important;
+    border: 1px solid rgba(13,79,60,.1)!important;
+    border-radius: 13px!important;
+    background: rgba(255,255,255,.72)!important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.95)!important;
+  }
+  #nk-home-search .nk-search-date-arrow {
+    width: 22px;
+    height: 22px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #0d4f3c!important;
+    color: #d7eddf!important;
+    box-shadow: 0 4px 10px rgba(13,79,60,.18);
+  }
+  #nk-home-search .nk-search-field:nth-child(2) {
+    background: linear-gradient(145deg,rgba(255,252,239,.97),rgba(249,241,211,.88))!important;
+    border-color: rgba(201,168,76,.27)!important;
+  }
+  #nk-home-search .nk-search-field:nth-child(3) {
+    background: linear-gradient(145deg,rgba(239,249,243,.98),rgba(216,239,225,.9))!important;
+    border-color: rgba(47,107,82,.24)!important;
+  }
+  #nk-home-search .nk-search-guest-field {
+    background: linear-gradient(145deg,rgba(245,249,246,.98),rgba(226,239,231,.9))!important;
+    border-color: rgba(95,157,120,.27)!important;
+  }
+  #nk-home-search .nk-search-field select,
+  #nk-home-search .nk-search-guest-toggle {
+    min-height: 37px!important;
+    display: flex!important;
+    align-items: center;
+    padding: 0 12px!important;
+    border: 1px solid rgba(13,79,60,.1)!important;
+    border-radius: 12px!important;
+    background-color: rgba(255,255,255,.64)!important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.92)!important;
+  }
+  #nk-home-search .nk-search-field select { padding-right: 32px!important; cursor: pointer; }
+  #nk-home-search .nk-search-guest-toggle { cursor: pointer; }
+  #nk-home-search .nk-search-submit {
+    min-height: 100%;
+    margin: 0!important;
+    border: 1px solid rgba(255,255,255,.58)!important;
+    border-radius: 18px!important;
+    background: linear-gradient(145deg,#78ad91 0%,#2f6b52 100%)!important;
+    box-shadow: 0 12px 24px rgba(47,107,82,.3),inset 0 1px 0 rgba(255,255,255,.45)!important;
+  }
+  #nk-home-search .nk-search-date:hover,
+  #nk-home-search .nk-search-date:focus-visible {
+    border-color: rgba(43,138,99,.42)!important;
+    background: #fff!important;
+    box-shadow: 0 0 0 3px rgba(43,138,99,.1),0 6px 14px rgba(13,79,60,.08)!important;
+  }
+  @media (max-width:900px) {
+    #nk-home-search .nk-search-fields { gap: 9px!important; }
+    #nk-home-search .nk-search-submit { min-height: 70px!important; border-radius: 18px!important; margin: 0!important; }
+  }
+  @media (max-width:767px) {
+    #nk-home-search .nk-search-field { padding: 10px 11px!important; border-radius: 16px!important; }
+    #nk-home-search .nk-search-dates { padding: 9px!important; }
+    #nk-home-search .nk-search-date { padding: 9px 10px!important; }
+    #nk-home-search .nk-search-date strong { font-size: .72rem; }
+    #nk-home-search .nk-search-field select,
+    #nk-home-search .nk-search-guest-toggle { min-height: 38px!important; padding-inline: 10px!important; font-size: .74rem; }
+    #nk-home-search .nk-search-submit { min-height: 68px!important; }
+  }
+  @media (max-width:390px) {
+    #nk-home-search .nk-search-date small { font-size: .58rem; }
+    #nk-home-search .nk-search-date strong { font-size: .66rem; }
+    #nk-home-search .nk-search-field { padding-inline: 9px!important; }
+  }
 </style>
