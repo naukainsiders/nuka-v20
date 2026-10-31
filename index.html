@@ -6251,6 +6251,7 @@ function nkSendGuestAvailabilityToWhatsApp() {
     '',
     'Please confirm availability and share the best offer.'
   ].filter((line, index, list) => !(line === '' && list[index - 1] === ''));
+  try { sessionStorage.setItem('nk_post_booking_fleet_reset', String(Date.now())); } catch (_) {}
   window.openWhatsApp?.(lines.join('\n'));
 }
 window.nkSendGuestAvailabilityToWhatsApp = nkSendGuestAvailabilityToWhatsApp;
@@ -13436,6 +13437,7 @@ document.addEventListener('DOMContentLoaded', function () {
       'This request has been saved in the Nauka app and is awaiting availability confirmation.'
     ].join('\n');
     try { sessionStorage.setItem('nk_wa_pending', String(Date.now())); } catch (error) { /* private browsing can block sessionStorage */ }
+    try { sessionStorage.setItem('nk_post_booking_fleet_reset', String(Date.now())); } catch (error) { /* private browsing can block sessionStorage */ }
     window.closeBookingModal?.();
     window.showView?.('mybookings');
     if (typeof window.toast === 'function') {
@@ -16475,4 +16477,309 @@ body:has(#view-login.active){max-width:none!important;margin-left:0!important;ma
     window.closeAuthSheet = removeLegacyAuthSheets;
     window.closeAuthGate = removeLegacyAuthSheets;
   })();
+</script>
+<style id="nauka-minimal-search-and-admin-pages">
+  /* Keep the search surface quiet: white fields, crisp black outlines and no
+     competing gradients or glass effects. */
+  #nk-home-search .nk-home-search-card {
+    border: 1px solid #171717 !important;
+    background: #fff !important;
+    box-shadow: 0 12px 28px rgba(0,0,0,.08) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  #nk-home-search .nk-search-fields {
+    gap: 10px !important;
+    border: 0 !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    overflow: visible !important;
+  }
+  #nk-home-search .nk-search-field,
+  #nk-home-search .nk-search-field:nth-child(2),
+  #nk-home-search .nk-search-field:nth-child(3),
+  #nk-home-search .nk-search-guest-field {
+    border: 1px solid #171717 !important;
+    border-radius: 14px !important;
+    background: #fff !important;
+    box-shadow: none !important;
+  }
+  #nk-home-search .nk-search-field:first-child { border-radius: 14px !important; }
+  #nk-home-search .nk-search-field select,
+  #nk-home-search .nk-search-guest-toggle {
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+  #nk-home-search .nk-search-submit {
+    min-height: 100%;
+    margin: 0 !important;
+    border: 1px solid #171717 !important;
+    border-radius: 14px !important;
+    background: #0d4f3c !important;
+    box-shadow: none !important;
+  }
+  #nk-home-search .nk-search-date:hover,
+  #nk-home-search .nk-search-date:focus-visible {
+    background: #fafafa !important;
+    box-shadow: none !important;
+  }
+
+  /* Admin fleet actions are pages in the admin workspace, not floating
+     confirmation sheets. */
+  #nka-admin-root .nka-admin-action-page {
+    display: block;
+    min-height: calc(100svh - 24px);
+    padding: clamp(18px, 3vw, 34px);
+    background: #f7f8f6;
+    color: #14211b;
+  }
+  #nka-admin-root .nka-admin-action-shell {
+    width: min(100%, 960px);
+    margin: 0 auto;
+    padding: clamp(18px, 3vw, 30px);
+    border: 1px solid #171717 !important;
+    border-radius: 22px;
+    background: #fff !important;
+    box-shadow: 0 16px 42px rgba(0,0,0,.08) !important;
+  }
+  #nka-admin-root .nka-action-page-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 22px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e5e7e5;
+  }
+  #nka-admin-root .nka-action-page-top button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 0 12px;
+    border: 1px solid #171717;
+    border-radius: 11px;
+    background: #fff;
+    color: #171717;
+    font: 800 11px/1 'Plus Jakarta Sans', sans-serif;
+    cursor: pointer;
+  }
+  #nka-admin-root .nka-action-page-context {
+    color: #758179;
+    font: 800 10px/1.2 'Plus Jakarta Sans', sans-serif;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    text-align: right;
+  }
+  #nka-admin-root .nka-admin-action-page .nka-pricing-card {
+    width: min(100%, 960px);
+    max-height: none;
+    margin: 0 auto;
+    padding: 0;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+  #nka-admin-root .nka-admin-action-page .nka-pricing-section {
+    background: #fff;
+    border-color: #e3e6e3;
+    box-shadow: none;
+  }
+  #nka-admin-root .nka-admin-editor-sheet {
+    width: 100% !important;
+    max-width: none !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+  #nka-admin-root .nka-admin-editor-sheet > .flex.justify-center { display: none !important; }
+  #nka-admin-root .nka-admin-editor-sheet > .px-6.pb-10.pt-3 { padding: 0 !important; }
+  #nka-admin-root .nka-admin-editor-sheet > .px-6.pb-10.pt-3 > .flex.items-center.justify-between.mb-5 { display: none !important; }
+  body:has(#nka-pricing-dialog), body:has(#nka-fleet-dialog), body:has(#nka-fleet-editor-page) { overflow: auto !important; }
+  @media (max-width: 620px) {
+    #nka-admin-root .nka-admin-action-page { padding: 12px; }
+    #nka-admin-root .nka-admin-action-shell { padding: 16px; border-radius: 18px; }
+    #nka-admin-root .nka-action-page-top { align-items: flex-start; flex-direction: column; }
+    #nka-admin-root .nka-action-page-context { text-align: left; }
+    #nka-admin-root .nka-admin-action-page .grid.grid-cols-2 { grid-template-columns: 1fr; }
+    #nk-home-search .nk-search-fields { gap: 8px !important; }
+    #nk-home-search .nk-search-field { border-radius: 13px !important; }
+    #nk-home-search .nk-search-submit { border-radius: 13px !important; }
+  }
+</style>
+<script id="nauka-post-booking-fleet-reset">
+(function () {
+  'use strict';
+  function clearCompletedBookingFilter() {
+    var pending = false;
+    try { pending = !!sessionStorage.getItem('nk_post_booking_fleet_reset'); } catch (_) {}
+    if (!pending) return false;
+    try { sessionStorage.removeItem('nk_post_booking_fleet_reset'); } catch (_) {}
+    if (typeof window.clearHomeSearch === 'function') window.clearHomeSearch();
+    else {
+      window.nkHomeFilter = null;
+      window.nkLandingPreferences = null;
+      try { localStorage.removeItem('nauka_home_filter_v2'); } catch (_) {}
+    }
+    window.nkCruiseMode = 'overnight';
+    window.nkBookingMode = 'overnight';
+    if (typeof state !== 'undefined') {
+      state._currentCategory = 'all';
+      state.selectedRoute = null;
+    }
+    return true;
+  }
+  window.nkResetFleetAfterBooking = clearCompletedBookingFilter;
+  var rawShowView = window.showView;
+  if (typeof rawShowView === 'function' && !rawShowView.__nkPostBookingFleetReset) {
+    var showView = function (viewName) {
+      var target = viewName === 'fleet' ? 'boats' : viewName;
+      if (target === 'boats') clearCompletedBookingFilter();
+      return rawShowView.apply(this, arguments);
+    };
+    showView.__nkPostBookingFleetReset = true;
+    window.showView = showView;
+  }
+})();
+</script>
+<script id="nauka-admin-action-pages">
+(function () {
+  'use strict';
+  function adminRoot() { return document.getElementById('nka-admin-root'); }
+  function parkBackground(root, page) {
+    if (!root) return;
+    Array.from(root.children).forEach(function (node) {
+      if (node === page) return;
+      node.dataset.nkAdminActionHidden = 'true';
+      node.hidden = true;
+    });
+    document.body.style.overflow = 'auto';
+  }
+  function restoreBackground(root) {
+    if (!root) return;
+    root.querySelectorAll('[data-nk-admin-action-hidden="true"]').forEach(function (node) {
+      node.hidden = false;
+      delete node.dataset.nkAdminActionHidden;
+    });
+    document.body.style.overflow = '';
+  }
+  function addActionHeader(shell, context, closeHandler) {
+    if (!shell || shell.querySelector('.nka-action-page-top')) return;
+    shell.insertAdjacentHTML('afterbegin', '<div class="nka-action-page-top"><button type="button" onclick="' + closeHandler + '"><i class="fa-solid fa-arrow-left"></i><span>Back to fleet</span></button><span class="nka-action-page-context">Manage Fleet / ' + context + '</span></div>');
+  }
+  function decorateDialog(id, context, closeHandler) {
+    var root = adminRoot(), page = document.getElementById(id);
+    if (!root || !page) return null;
+    page.classList.remove('nka-modal');
+    page.classList.add('nka-admin-action-page');
+    page.removeAttribute('role');
+    page.removeAttribute('aria-modal');
+    page.removeAttribute('onclick');
+    var shell = page.querySelector('.nka-modal-card');
+    if (shell) {
+      shell.classList.remove('nka-modal-card');
+      shell.classList.add('nka-admin-action-shell');
+      shell.removeAttribute('onclick');
+      addActionHeader(shell, context, closeHandler);
+    }
+    parkBackground(root, page);
+    return page;
+  }
+
+  var rawCloseListingModal = window.closeListingModal;
+  window.closeAdminFleetWindow = function () {
+    var root = adminRoot(), page = document.getElementById('nka-fleet-editor-page'), modal = document.getElementById('listingModal');
+    var sheet = page && page.querySelector('.nka-admin-editor-sheet');
+    if (sheet && modal) {
+      sheet.classList.remove('nka-admin-editor-sheet');
+      modal.appendChild(sheet);
+    }
+    page?.remove();
+    if (modal) {
+      modal.classList.remove('open');
+      modal.style.display = '';
+      modal.removeAttribute('aria-hidden');
+    }
+    restoreBackground(root);
+    return true;
+  };
+  window.closeListingModal = function () {
+    if (document.getElementById('nka-fleet-editor-page')) return window.closeAdminFleetWindow();
+    return rawCloseListingModal?.apply(this, arguments);
+  };
+
+  var rawOpenAdminBoatEditor = window.openAdminBoatEditor;
+  if (typeof rawOpenAdminBoatEditor === 'function') {
+    window.openAdminBoatEditor = function (id) {
+      var result = rawOpenAdminBoatEditor.apply(this, arguments);
+      var root = adminRoot(), modal = document.getElementById('listingModal'), sheet = modal?.querySelector('.listing-sheet');
+      if (!root || !modal || !sheet) return result;
+      document.getElementById('nka-fleet-editor-page')?.remove();
+      var page = document.createElement('section');
+      page.id = 'nka-fleet-editor-page';
+      page.className = 'nka-admin-action-page';
+      page.setAttribute('role', 'region');
+      page.setAttribute('aria-labelledby', 'nka-fleet-editor-title');
+      page.innerHTML = '<div class="nka-admin-action-shell"><div class="nka-action-page-top"><button type="button" onclick="closeAdminFleetWindow()"><i class="fa-solid fa-arrow-left"></i><span>Back to fleet</span></button><span id="nka-fleet-editor-title" class="nka-action-page-context">Manage Fleet / House boat editor</span></div><div id="nka-fleet-editor-mount"></div></div>';
+      root.appendChild(page);
+      page.querySelector('#nka-fleet-editor-mount').appendChild(sheet);
+      sheet.classList.add('nka-admin-editor-sheet');
+      modal.classList.remove('open');
+      modal.style.display = 'none';
+      modal.setAttribute('aria-hidden', 'true');
+      parkBackground(root, page);
+      return result;
+    };
+  }
+
+  var rawOpenFleetPricingDialog = window.openFleetPricingDialog;
+  var rawCloseFleetPricingDialog = window.closeFleetPricingDialog;
+  window.openFleetPricingDialog = function (id) {
+    var result = rawOpenFleetPricingDialog?.apply(this, arguments);
+    decorateDialog('nka-pricing-dialog', 'Pricing & dates', 'closeFleetPricingDialog()');
+    return result;
+  };
+  window.closeFleetPricingDialog = function () {
+    var result = rawCloseFleetPricingDialog?.apply(this, arguments);
+    restoreBackground(adminRoot());
+    return result;
+  };
+
+  var rawOpenFleetLifecycleDialog = window.openFleetLifecycleDialog;
+  window.closeAdminLifecycleWindow = function () {
+    document.getElementById('nka-fleet-dialog')?.remove();
+    restoreBackground(adminRoot());
+  };
+  window.openFleetLifecycleDialog = function (id) {
+    var result = rawOpenFleetLifecycleDialog?.apply(this, arguments);
+    var page = decorateDialog('nka-fleet-dialog', 'Fleet status', 'closeAdminLifecycleWindow()');
+    if (page) {
+      var closeButton = page.querySelector('button[aria-label="Close"]');
+      if (closeButton) closeButton.onclick = window.closeAdminLifecycleWindow;
+      page.querySelectorAll('.nka-modal-actions button').forEach(function (button) {
+        button.addEventListener('click', function () { setTimeout(window.closeAdminLifecycleWindow, 0); });
+      });
+    }
+    return result;
+  };
+
+  /* Navigate immediately; Supabase sign-out is still completed in the
+     background so a slow network cannot make the logout button feel stuck. */
+  window.adminLogOut = function () {
+    if (window.__nkAdminLogoutInFlight) return;
+    window.__nkAdminLogoutInFlight = true;
+    window.closeAdminFleetWindow?.();
+    window.closeFleetPricingDialog?.();
+    window.closeAdminLifecycleWindow?.();
+    try { window.saveBookingSnapshot?.(); } catch (_) {}
+    if (typeof clearUserState === 'function') clearUserState();
+    showView('login');
+    switchLoginTab('customer');
+    var api = window.naukaSupabase;
+    if (api?.auth?.signOut) Promise.resolve(api.auth.signOut()).catch(function (error) { console.warn('Admin session cleanup failed:', error); });
+    setTimeout(function () { window.__nkAdminLogoutInFlight = false; }, 350);
+  };
+})();
 </script>
