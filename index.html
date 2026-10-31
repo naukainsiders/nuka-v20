@@ -16189,10 +16189,10 @@ body:has(#view-login.active){max-width:none!important;margin-left:0!important;ma
   if(typeof original!=='function'||original.__nkCheckoutFix)return;
   var pick=function(which){
     var experience=document.getElementById('nk-search-experience');
-    /* Tapping Check-out is an explicit request for an overnight range. */
+    /* Day cruises are same-day; show the inline feedback instead of changing modes. */
     if(which==='out'&&experience&&experience.value==='day'){
-      experience.value='overnight';
-      window.nkSearchSetExperience?.('overnight');
+      window.nkShowCruiseChoiceToast?.('You have chosen the DAY CRUISE.');
+      return;
     }
     window.nkCruiseMode=experience?.value==='day'?'day':'overnight';
     window.nkBookingMode=window.nkCruiseMode;
