@@ -1242,6 +1242,204 @@ Check your Browserslist config to be sure that your targets are set up correctly
   window.addEventListener('popstate',function(){setTimeout(rerenderPersistedFleet,0)});
 })();
 </script>
+<style id="nauka-final-mobile-polish">
+  /* Landing search: frosted surface, bold internal rules and no outer black frame. */
+  #nk-home-search {
+    width: min(1240px, calc(100% - 32px)) !important;
+    margin: -30px auto 18px !important;
+    position: relative;
+    z-index: 5;
+  }
+  #nk-home-search .nk-home-search-card {
+    border: 0 !important;
+    background: rgba(255,255,255,.64) !important;
+    backdrop-filter: blur(24px) saturate(135%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(135%) !important;
+    box-shadow: 0 18px 42px rgba(8,46,35,.12), inset 0 1px 0 rgba(255,255,255,.82) !important;
+  }
+  #nk-home-search .nk-search-fields { gap: 10px !important; background: transparent !important; border: 0 !important; }
+  #nk-home-search .nk-search-field,
+  #nk-home-search .nk-search-dates,
+  #nk-home-search .nk-search-guest-field {
+    border: 2px solid #171717 !important;
+    background: rgba(255,255,255,.56) !important;
+    box-shadow: none !important;
+  }
+  #nk-home-search .nk-search-date-pair,
+  #nk-home-search .nk-search-date,
+  #nk-home-search .nk-search-field select,
+  #nk-home-search .nk-search-guest-toggle { background: transparent !important; box-shadow: none !important; }
+  #nk-home-search .nk-search-submit {
+    width: auto !important;
+    min-width: 136px !important;
+    min-height: 56px !important;
+    padding: 0 18px !important;
+    border: 2px solid #171717 !important;
+    border-radius: 14px !important;
+    background: #0d4f3c !important;
+    box-shadow: none !important;
+    flex-direction: row !important;
+    gap: 9px !important;
+  }
+  #nk-home-search .nk-search-submit span { display: block !important; font-size: .78rem !important; line-height: 1.1 !important; }
+  #nk-home-search .nk-search-submit small { display: none !important; }
+  #nk-home-search .nk-search-submit i { margin: 0 !important; font-size: .95rem !important; }
+
+  /* Professional round emblem on the landing header. */
+  #view-home .nk-home-toolbar-brand {
+    width: 48px !important;
+    height: 48px !important;
+    padding: 4px !important;
+    border-radius: 50% !important;
+    overflow: hidden !important;
+    background: rgba(255,255,255,.9) !important;
+    border: 1px solid rgba(255,255,255,.72) !important;
+    box-shadow: 0 8px 22px rgba(5,42,31,.2), inset 0 1px 0 rgba(255,255,255,.9) !important;
+  }
+  #view-home .nk-home-toolbar-brand img { width: 100% !important; height: 100% !important; border-radius: 50% !important; object-fit: cover !important; }
+
+  /* Admin fleet header and action pages. */
+  #nka-admin-root .nka-fleet-heading { flex-direction: column !important; align-items: stretch !important; gap: 7px !important; }
+  #nka-admin-root .nka-fleet-heading-actions { justify-content: flex-start !important; }
+  #nka-admin-root .nka-filters { display: none !important; }
+  #nka-admin-root .nka-admin-editor-sheet .px-6.pb-10.pt-3 > div.mb-5:has(.nk-image-crop-frame) { display: none !important; }
+  #nka-admin-root .nka-admin-action-page .nka-pricing-section { min-width: 0; overflow: hidden; }
+  #nka-admin-root .nka-admin-action-page input,
+  #nka-admin-root .nka-admin-action-page select,
+  #nka-admin-root .nka-admin-action-page textarea { max-width: 100%; min-width: 0; }
+  .nkt-terms-card.nk-terms-error,
+  #nk-booking-terms-card.nk-terms-error { border-color: #c44949 !important; background: #fff5f5 !important; box-shadow: 0 0 0 3px rgba(196,73,73,.1) !important; }
+
+  @media (max-width: 767px) {
+    #nk-home-search { width: calc(100% - 20px) !important; margin: -18px auto 16px !important; }
+    #nk-home-search .nk-search-fields { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+    #nk-home-search .nk-search-dates,
+    #nk-home-search .nk-search-guest-field,
+    #nk-home-search .nk-search-submit { grid-column: 1 / -1 !important; }
+    #nk-home-search .nk-search-submit { width: min(100%, 240px) !important; min-height: 54px !important; margin: 2px auto 0 !important; }
+    #view-home .nk-home-toolbar-brand { width: 44px !important; height: 44px !important; }
+    #nka-admin-root .nka-admin-action-page { min-height: 100svh; padding: 8px !important; }
+    #nka-admin-root .nka-admin-action-shell { width: 100% !important; padding: 12px !important; border-radius: 16px !important; }
+    #nka-admin-root .nka-action-page-top { margin-bottom: 14px !important; padding-bottom: 12px !important; }
+    #nka-admin-root .nka-admin-action-page .grid.grid-cols-2 { grid-template-columns: 1fr !important; }
+    #nka-admin-root .nka-pricing-calendar { max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    #nka-admin-root .nka-modal-actions,
+    #nka-admin-root .nka-actions { grid-template-columns: 1fr !important; }
+  }
+</style>
+<script id="nauka-final-runtime-fixes">
+(function () {
+  'use strict';
+
+  function syncVisibleSearchDates() {
+    var start = document.getElementById('booking-date')?.value || '';
+    var end = document.getElementById('booking-checkout')?.value || '';
+    var mode = document.getElementById('nk-search-experience')?.value || window.nkBookingMode || window.nkCruiseMode || 'overnight';
+    var format = function (iso) {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(String(iso || ''))) return 'Choose date';
+      var parts = String(iso).split('-').map(Number);
+      return new Date(parts[0], parts[1] - 1, parts[2]).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+    };
+    var checkin = document.getElementById('nk-search-checkin');
+    var checkout = document.getElementById('nk-search-checkout');
+    if (checkin) checkin.textContent = format(start);
+    if (checkout) checkout.textContent = mode === 'day' && start ? 'Day Cruise selected' : format(end);
+    document.getElementById('booking-date')?.dispatchEvent(new Event('input', { bubbles: true }));
+    document.getElementById('booking-checkout')?.dispatchEvent(new Event('input', { bubbles: true }));
+    window.requestAnimationFrame?.(function () {
+      var again = document.getElementById('nk-search-checkout');
+      if (again) again.textContent = mode === 'day' && start ? 'Day Cruise selected' : format(end);
+    });
+  }
+
+  function installCalendarSync() {
+    var original = window.pickCalendarDate;
+    if (typeof original !== 'function' || original.__nkFinalDateSync) return;
+    var wrapped = async function () {
+      var result = await original.apply(this, arguments);
+      syncVisibleSearchDates();
+      window.saveLandingPreferences?.();
+      return result;
+    };
+    wrapped.__nkFinalDateSync = true;
+    window.pickCalendarDate = wrapped;
+  }
+  installCalendarSync();
+  setTimeout(installCalendarSync, 0);
+  document.addEventListener('click', function (event) {
+    if (event.target.closest?.('.nk-cal-day')) setTimeout(syncVisibleSearchDates, 0);
+  }, true);
+
+  function normalizeAdminScreens() {
+    var admin = document.getElementById('nka-admin-root');
+    if (!admin) return;
+    var overviewTitle = Array.from(admin.querySelectorAll('h2')).find(function (node) { return node.textContent.trim() === 'Platform at a glance'; });
+    if (overviewTitle) {
+      var overview = overviewTitle.closest('#nka-admin-body') || admin;
+      overview.querySelector('.nka-chart-card')?.remove();
+      var owned = Array.from(overview.querySelectorAll('.nka-title')).find(function (node) { return node.textContent.trim() === 'Admin-owned fleet'; });
+      owned?.closest('.nka-card')?.remove();
+    }
+    var fleetTitle = Array.from(admin.querySelectorAll('h2')).find(function (node) { return node.textContent.trim() === 'House boat fleet' || node.textContent.trim() === 'Manage Fleet'; });
+    if (fleetTitle) {
+      fleetTitle.textContent = 'Manage Fleet';
+      var header = fleetTitle.closest('.flex.items-end.justify-between.gap-3');
+      if (header) {
+        header.classList.add('nka-fleet-heading');
+        header.querySelector('.nka-head-actions')?.classList.add('nka-fleet-heading-actions');
+        header.querySelector('.nka-label')?.remove();
+      }
+      admin.querySelector('.nka-filters')?.remove();
+    }
+  }
+  function normalizeDayCruiseCopy() {
+    document.querySelectorAll('#nk-dv3-modes [data-booking-mode="day"]').forEach(function (button) {
+      if (button.dataset.nkSameDayCopy === '1') return;
+      button.innerHTML = '<i class="fa-solid fa-sun mr-1"></i>Same Day Return';
+      button.dataset.nkSameDayCopy = '1';
+    });
+  }
+  function normalizeReviewCopy() {
+    document.querySelectorAll('.nk-review-heading h2').forEach(function (heading) {
+      if (/Loved on Google/i.test(heading.textContent)) heading.textContent = 'Reviews from Nauka guests';
+    });
+    document.querySelectorAll('.nk-review-meta').forEach(function (meta) {
+      if (/Google review/i.test(meta.textContent)) meta.textContent = meta.textContent.replace(/Google review/gi, 'Nauka guest');
+    });
+  }
+  function clearLegacyBookingSnapshots() {
+    var marker = 'nauka_booking_cleanup_20261031';
+    try {
+      if (localStorage.getItem(marker)) return;
+      localStorage.removeItem('alp_ops_bookings');
+      var raw = localStorage.getItem('alp_user_data');
+      if (raw) {
+        var profile = JSON.parse(raw);
+        if (profile && typeof profile === 'object') {
+          profile.userBookings = [];
+          localStorage.setItem('alp_user_data', JSON.stringify(profile));
+        }
+      }
+      localStorage.setItem(marker, '1');
+    } catch (_) {}
+    if (typeof state !== 'undefined') {
+      state.userBookings = [];
+      try { window.persistState?.(); } catch (_) {}
+    }
+  }
+  function startFinalRuntimeFixes() {
+    installCalendarSync();
+    clearLegacyBookingSnapshots();
+    normalizeAdminScreens();
+    normalizeDayCruiseCopy();
+    normalizeReviewCopy();
+    if (!document.body) return;
+    new MutationObserver(function () { normalizeAdminScreens(); normalizeDayCruiseCopy(); normalizeReviewCopy(); }).observe(document.body, { childList: true, subtree: true });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', startFinalRuntimeFixes, { once: true });
+  else startFinalRuntimeFixes();
+})();
+</script>
   <style id="font-awesome-6-7-2">/*!
  * Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
@@ -2630,7 +2828,7 @@ body:has(#auth-gate-sheet.open) #customer-bottom-nav{opacity:0!important;visibil
         </div>
         <button type="button" class="nk-search-submit" onclick="applyNaukaHomeSearch()">
           <i class="fa-solid fa-magnifying-glass"></i>
-          <span>Search<small>Find my boat</small></span>
+          <span>Find your boat</span>
         </button>
       </div>
     </div>
@@ -6213,6 +6411,17 @@ function nkSendGuestAvailabilityToWhatsApp() {
   const property = state.selectedProperty || window.__nkGateCtx?.property || {};
   const direct = window.__nkDirectAvailability || {};
   const value = id => document.getElementById(id)?.value || direct[id] || '';
+  const terms = document.getElementById('nkt-terms-preview') || document.getElementById('nk-booking-terms');
+  if (!terms?.checked) {
+    const message = 'Please accept the terms and conditions before continuing to WhatsApp.';
+    const localMessage = document.getElementById('nkt-msg');
+    if (localMessage) localMessage.textContent = message;
+    terms?.closest('.nkt-terms-card, #nk-booking-terms-card')?.classList.add('nk-terms-error');
+    terms?.focus({ preventScroll: true });
+    window.showBookingError?.(message);
+    terms?.scrollIntoView?.({ behavior: 'smooth', block: 'center' });
+    return;
+  }
   const date = value('booking-date');
   const checkout = value('booking-checkout');
   const mode = window.nkBookingMode || window.nkCruiseMode || 'day';
@@ -8394,7 +8603,34 @@ document.addEventListener('visibilitychange',chk);window.addEventListener('focus
     }
     return [];
   }
-  let REVIEWS = loadStoredReviews();
+  function normalizeReviewRecord(item) {
+    if (Array.isArray(item)) {
+      const text = String(item[2] ?? item[1] ?? '').trim();
+      if (!text) return null;
+      return [
+        String(item[0] ?? 'Guest').trim() || 'Guest',
+        String(item[1] ?? '').trim(),
+        text,
+        Number.isFinite(Number(item[3])) ? Number(item[3]) : 0,
+        Math.max(1, Math.min(5, Number(item[4]) || 5)),
+        item[5] || ''
+      ];
+    }
+    if (item && typeof item === 'object') {
+      const text = String(item.quote ?? item.text ?? item.review ?? item.comment ?? '').trim();
+      if (!text) return null;
+      return [
+        String(item.name ?? item.guest_name ?? item.author ?? 'Guest').trim() || 'Guest',
+        String(item.location ?? item.city ?? item.place ?? '').trim(),
+        text,
+        Number.isFinite(Number(item.avatarIndex ?? item.avatar_idx)) ? Number(item.avatarIndex ?? item.avatar_idx) : 0,
+        Math.max(1, Math.min(5, Number(item.rating) || 5)),
+        item.createdAt ?? item.created_at ?? ''
+      ];
+    }
+    return null;
+  }
+  let REVIEWS = loadStoredReviews().map(normalizeReviewRecord).filter(Boolean);
   window.REVIEWS = REVIEWS;
   function saveStoredReviews() {
     try {
@@ -8536,7 +8772,7 @@ document.addEventListener('visibilitychange',chk);window.addEventListener('focus
   function addHomeSearch(){
     const hero=document.querySelector('#view-home > section:first-child');
     if(!document.getElementById('nk-home-search')&&hero){
-      hero.insertAdjacentHTML('afterend',`<section id="nk-home-search" class="nk-home-search" aria-label="Find a houseboat"><div class="nk-home-search-card"><div class="nk-search-heading"><span class="nk-search-kicker">PLAN YOUR BACKWATER STAY</span><p>Find your houseboat</p></div><div class="nk-search-fields"><div class="nk-search-field nk-search-dates"><span class="nk-search-label">TRAVEL DATE</span><div class="nk-search-date-pair"><button type="button" class="nk-search-date" onclick="nkSearchPickDate('in')"><small>Check-in</small><strong id="nk-search-checkin">Choose date</strong></button><span class="nk-search-date-arrow"><i class="fa-solid fa-arrow-right"></i></span><button type="button" class="nk-search-date" onclick="nkSearchPickDate('out')"><small>Check-out</small><strong id="nk-search-checkout">Choose date</strong></button></div></div><label class="nk-search-field"><span class="nk-search-label">BEDROOMS</span><select id="nk-search-boat-type"><option value="all">Any</option><option value="1">1 Bedroom</option><option value="2">2 Bedrooms</option><option value="3">3 Bedrooms</option><option value="4">4 Bedrooms</option><option value="5">5 Bedrooms</option><option value="5plus">6+ Bedrooms</option></select></label><label class="nk-search-field"><span class="nk-search-label">EXPERIENCE</span><select id="nk-search-experience" onchange="nkSearchSetExperience(this.value)"><option value="overnight">Overnight stay</option><option value="day">Day cruise</option></select></label><div class="nk-search-field nk-search-guest-field"><span class="nk-search-label">GUESTS</span><button type="button" class="nk-search-guest-toggle" id="nk-search-guest-toggle" aria-expanded="false" onclick="nkToggleGuestPanel()"><span id="nk-search-guest-summary">2 Adults</span><i class="fa-solid fa-chevron-down"></i></button><div id="nk-search-guest-panel" class="nk-search-guest-panel" hidden><div class="nk-guest-row"><div><strong>Adults</strong><small>Age 13+</small></div><div class="nk-guest-stepper"><button type="button" aria-label="Remove an adult" onclick="nkChangeSearchGuest('adults',-1)">−</button><span id="nk-search-adults">2</span><button type="button" aria-label="Add an adult" onclick="nkChangeSearchGuest('adults',1)">+</button></div></div><div class="nk-guest-row"><div><strong>Children</strong><small>Age 2–12</small></div><div class="nk-guest-stepper"><button type="button" aria-label="Remove a child" onclick="nkChangeSearchGuest('children',-1)">−</button><span id="nk-search-children">0</span><button type="button" aria-label="Add a child" onclick="nkChangeSearchGuest('children',1)">+</button></div></div><p>Boat capacity is matched to your group size.</p></div></div><button type="button" class="nk-search-submit" onclick="applyNaukaHomeSearch()"><i class="fa-solid fa-magnifying-glass"></i><span>Search<small>Find my boat</small></span></button></div></div></section>`);
+      hero.insertAdjacentHTML('afterend',`<section id="nk-home-search" class="nk-home-search" aria-label="Find a houseboat"><div class="nk-home-search-card"><div class="nk-search-heading"><span class="nk-search-kicker">PLAN YOUR BACKWATER STAY</span><p>Find your houseboat</p></div><div class="nk-search-fields"><div class="nk-search-field nk-search-dates"><span class="nk-search-label">TRAVEL DATE</span><div class="nk-search-date-pair"><button type="button" class="nk-search-date" onclick="nkSearchPickDate('in')"><small>Check-in</small><strong id="nk-search-checkin">Choose date</strong></button><span class="nk-search-date-arrow"><i class="fa-solid fa-arrow-right"></i></span><button type="button" class="nk-search-date" onclick="nkSearchPickDate('out')"><small>Check-out</small><strong id="nk-search-checkout">Choose date</strong></button></div></div><label class="nk-search-field"><span class="nk-search-label">BEDROOMS</span><select id="nk-search-boat-type"><option value="all">Any</option><option value="1">1 Bedroom</option><option value="2">2 Bedrooms</option><option value="3">3 Bedrooms</option><option value="4">4 Bedrooms</option><option value="5">5 Bedrooms</option><option value="5plus">6+ Bedrooms</option></select></label><label class="nk-search-field"><span class="nk-search-label">EXPERIENCE</span><select id="nk-search-experience" onchange="nkSearchSetExperience(this.value)"><option value="overnight">Overnight stay</option><option value="day">Day cruise</option></select></label><div class="nk-search-field nk-search-guest-field"><span class="nk-search-label">GUESTS</span><button type="button" class="nk-search-guest-toggle" id="nk-search-guest-toggle" aria-expanded="false" onclick="nkToggleGuestPanel()"><span id="nk-search-guest-summary">2 Adults</span><i class="fa-solid fa-chevron-down"></i></button><div id="nk-search-guest-panel" class="nk-search-guest-panel" hidden><div class="nk-guest-row"><div><strong>Adults</strong><small>Age 13+</small></div><div class="nk-guest-stepper"><button type="button" aria-label="Remove an adult" onclick="nkChangeSearchGuest('adults',-1)">−</button><span id="nk-search-adults">2</span><button type="button" aria-label="Add an adult" onclick="nkChangeSearchGuest('adults',1)">+</button></div></div><div class="nk-guest-row"><div><strong>Children</strong><small>Age 2–12</small></div><div class="nk-guest-stepper"><button type="button" aria-label="Remove a child" onclick="nkChangeSearchGuest('children',-1)">−</button><span id="nk-search-children">0</span><button type="button" aria-label="Add a child" onclick="nkChangeSearchGuest('children',1)">+</button></div></div><p>Boat capacity is matched to your group size.</p></div></div><button type="button" class="nk-search-submit" onclick="applyNaukaHomeSearch()"><i class="fa-solid fa-magnifying-glass"></i><span>Find your boat</span></button></div></div></section>`);
     }
     window.nkSearchPickDate=function(which){const mode=document.getElementById('nk-search-experience')?.value||'overnight';window.nkCruiseMode=mode;window.nkBookingMode=mode;if(which==='out'&&(mode==='day'||!document.getElementById('booking-date')?.value))which='in';if(which==='in'&&!document.getElementById('booking-date')?.value)window.nkResetBookingDateRange?.();const old=state.selectedProperty;if(state.currentView==='home')state.selectedProperty=null;window.openBookingDatePicker?.(which);if(state.currentView==='home')state.selectedProperty=old};
     window.nkSearchSetExperience=function(mode){window.nkCruiseMode=mode==='day'?'day':'overnight';window.nkBookingMode=window.nkCruiseMode;const start=document.getElementById('booking-date')?.value||'',end=document.getElementById('booking-checkout');if(mode==='day'&&end&&start)end.value=start;else if(mode!=='day'&&end&&end.value===start)end.value='';syncHomeSearchDates();saveLandingPreferences()};
@@ -8654,8 +8890,10 @@ document.addEventListener('visibilitychange',chk);window.addEventListener('focus
     }
     if (!section) return;
 
-    if (!REVIEWS || REVIEWS.length === 0) {
-      section.innerHTML = `<div class="nk-review-heading text-center mb-5"><div class="nk-section-kicker">Guest notes</div><h2 class="text-2xl sm:text-3xl font-serif font-bold text-navy mt-4">Loved on Google</h2><p class="text-slate-600 text-xs sm:text-sm mt-2">Real words from travellers who stayed with us.</p></div><div class="max-w-md mx-auto my-3 px-6 py-8 text-center bg-white/80 backdrop-blur-md rounded-3xl border border-emerald/10 shadow-sm"><div class="w-14 h-14 rounded-2xl bg-emerald-mist text-emerald flex items-center justify-center mx-auto mb-3 text-xl shadow-inner"><i class="fa-solid fa-star"></i></div><h3 class="font-display text-xl text-ink font-semibold">No reviews yet</h3><p class="text-slate-500 text-xs mt-1.5 mb-5 leading-relaxed">Be the first to share your backwater experience and get featured right here.</p><button type="button" onclick="openAddReviewModal()" class="btn-emerald text-white text-xs font-bold px-5 py-3 rounded-2xl shadow-emerald inline-flex items-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition"><i class="fa-solid fa-pen-to-square"></i><span>Write the First Review</span></button></div>`;
+    REVIEWS = (Array.isArray(REVIEWS) ? REVIEWS : []).map(normalizeReviewRecord).filter(Boolean);
+    window.REVIEWS = REVIEWS;
+    if (!REVIEWS.length) {
+      section.innerHTML = `<div class="nk-review-heading text-center mb-5"><div class="nk-section-kicker">Guest notes</div><h2 class="text-2xl sm:text-3xl font-serif font-bold text-navy mt-4">Reviews from Nauka guests</h2><p class="text-slate-600 text-xs sm:text-sm mt-2">New guest reviews will appear here as soon as they are submitted.</p></div><div class="max-w-md mx-auto my-3 px-6 py-8 text-center bg-white/80 backdrop-blur-md rounded-3xl border border-emerald/10 shadow-sm"><div class="w-14 h-14 rounded-2xl bg-emerald-mist text-emerald flex items-center justify-center mx-auto mb-3 text-xl shadow-inner"><i class="fa-solid fa-star"></i></div><h3 class="font-display text-xl text-ink font-semibold">No reviews yet</h3><p class="text-slate-500 text-xs mt-1.5 mb-5 leading-relaxed">Be the first to share your backwater experience and get featured right here.</p><button type="button" onclick="openAddReviewModal()" class="btn-emerald text-white text-xs font-bold px-5 py-3 rounded-2xl shadow-emerald inline-flex items-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition"><i class="fa-solid fa-pen-to-square"></i><span>Write the First Review</span></button></div>`;
       return;
     }
 
@@ -12998,7 +13236,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const suspended = fleetRows.filter(row => row.status === 'suspended').length;
     return `<div class="flex items-end justify-between gap-3 mb-4"><div><p class="nka-label">Live overview</p><h2 class="nka-title mt-1">Platform at a glance</h2></div><span class="nka-status active">Admin managed</span></div>
       <div class="grid grid-cols-2 gap-3 mb-4"><div class="nka-stat"><span class="nka-label">Active boats</span><strong>${active}</strong><span class="nka-muted">${suspended} suspended</span></div><div class="nka-stat"><span class="nka-label">Bookings</span><strong>${bookingRows.length}</strong><span class="nka-muted">${pending} awaiting decision</span></div><div class="nka-stat"><span class="nka-label">Advance revenue</span><strong>${money(collected)}</strong><span class="nka-muted">${advancesRecorded} manually marked paid</span></div><div class="nka-stat"><span class="nka-label">Pending decisions</span><strong>${pending}</strong><span class="nka-muted">Awaiting accept or decline</span></div></div>
-      ${revenueChartHtml()}<div class="nka-card p-4 mb-3"><div class="flex items-center justify-between gap-3"><div><p class="nka-title" style="font-size:15px">Admin-owned fleet</p><p class="nka-muted mt-1">Add every house boat as its own card and control its availability here.</p></div><button class="nka-btn nka-btn-gold" onclick="window.AD.go('fleet')"><i class="fa-solid fa-ship mr-1"></i>Manage fleet</button></div></div>
       <div class="nka-card p-4"><div class="flex items-center justify-between gap-3 mb-3"><p class="nka-title" style="font-size:15px">Recent activity</p><button class="nka-btn nka-btn-soft" onclick="window.AD.go('bookings')">All bookings</button></div>${bookingRows.slice(0,5).map(row => `<div class="py-3 border-t border-gray-100"><div class="flex items-center justify-between gap-2"><p class="text-xs font-bold font-body text-ink truncate">${esc(row.guest_name || 'Guest')} · ${esc(row.property_name || 'House boat')}</p><span class="nka-status ${statusClass(row.status)}">${esc(row.status || 'pending')}</span></div><p class="nka-muted mt-1">${esc(row.id)} · ${fmtDate(row.created_at)}</p></div>`).join('') || '<p class="nka-muted py-4">No bookings yet.</p>'}</div>`;
   }
 
