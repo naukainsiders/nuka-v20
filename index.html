@@ -1061,6 +1061,279 @@ Check your Browserslist config to be sure that your targets are set up correctly
  */
 /*! https://mths.be/cssesc v3.0.0 by @mathias */
 </script>
+
+<style id="nauka-search-experience-redesign">
+  /*
+   * Search experience v11
+   * A quiet, premium surface for the landing page. This final layer intentionally
+   * replaces the legacy high-contrast outline treatment without changing the
+   * search markup or its existing interactions.
+   */
+  #nk-home-search {
+    width: min(1280px, calc(100% - 40px)) !important;
+    margin: -48px auto 34px !important;
+    position: relative;
+    z-index: 30;
+  }
+
+  #nk-home-search .nk-home-search-card {
+    position: relative;
+    padding: 18px 18px 20px !important;
+    border: 0 !important;
+    border-radius: 28px !important;
+    background: rgba(255, 255, 255, .94) !important;
+    box-shadow: 0 24px 70px rgba(9, 55, 40, .14), 0 3px 12px rgba(9, 55, 40, .05), inset 0 1px 0 rgba(255, 255, 255, .96) !important;
+    backdrop-filter: blur(22px) saturate(125%) !important;
+    -webkit-backdrop-filter: blur(22px) saturate(125%) !important;
+  }
+
+  #nk-home-search .nk-search-heading {
+    min-height: 27px;
+    padding: 0 4px 13px !important;
+  }
+
+  #nk-home-search .nk-search-kicker {
+    color: #1d8b61 !important;
+    font: 800 .63rem/1 'Plus Jakarta Sans', sans-serif !important;
+    letter-spacing: .18em !important;
+  }
+
+  #nk-home-search .nk-search-heading p {
+    color: #10261d !important;
+    font: 600 1.16rem/1 'Playfair Display', Georgia, serif !important;
+    letter-spacing: -.01em;
+  }
+
+  #nk-home-search .nk-search-fields {
+    display: grid !important;
+    grid-template-columns: minmax(270px, 1.48fr) minmax(150px, .84fr) minmax(168px, .95fr) minmax(160px, .92fr) 154px !important;
+    gap: 8px !important;
+    align-items: stretch;
+    overflow: visible !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+  }
+
+  #nk-home-search .nk-search-field {
+    min-width: 0;
+    min-height: 92px;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 17px !important;
+    border: 0 !important;
+    border-radius: 18px !important;
+    background: #f5f8f6 !important;
+    box-shadow: inset 0 0 0 1px rgba(19, 74, 54, .07), inset 0 1px 0 rgba(255, 255, 255, .96) !important;
+    transition: background .2s ease, box-shadow .2s ease, transform .2s ease;
+  }
+
+  #nk-home-search .nk-search-field:hover {
+    background: #f0f6f2 !important;
+    box-shadow: inset 0 0 0 1px rgba(29, 139, 97, .14), inset 0 1px 0 rgba(255, 255, 255, .98), 0 5px 15px rgba(11, 73, 51, .05) !important;
+  }
+
+  #nk-home-search .nk-search-label {
+    color: #84918b !important;
+    font: 800 .59rem/1 'Plus Jakarta Sans', sans-serif !important;
+    letter-spacing: .15em !important;
+  }
+
+  #nk-home-search .nk-search-dates {
+    padding: 11px !important;
+    background: #eef6f1 !important;
+    box-shadow: inset 0 0 0 1px rgba(29, 139, 97, .11), inset 0 1px 0 rgba(255, 255, 255, .98) !important;
+  }
+
+  #nk-home-search .nk-search-date-pair {
+    min-width: 0;
+    gap: 7px;
+  }
+
+  #nk-home-search .nk-search-date {
+    min-width: 0;
+    gap: 4px;
+    padding: 9px 11px !important;
+    border: 0 !important;
+    border-radius: 12px !important;
+    background: rgba(255, 255, 255, .78) !important;
+    box-shadow: inset 0 0 0 1px rgba(19, 74, 54, .06), inset 0 1px 0 rgba(255, 255, 255, .98) !important;
+    transition: background .2s ease, box-shadow .2s ease;
+  }
+
+  #nk-home-search .nk-search-date small {
+    color: #87958e !important;
+    font: 500 .63rem/1 'Plus Jakarta Sans', sans-serif !important;
+  }
+
+  #nk-home-search .nk-search-date strong {
+    color: #173128 !important;
+    font: 700 .82rem/1.2 'Plus Jakarta Sans', sans-serif !important;
+  }
+
+  #nk-home-search .nk-search-date-arrow {
+    width: 24px;
+    height: 24px;
+    display: grid;
+    flex: 0 0 24px;
+    place-items: center;
+    border-radius: 50%;
+    background: #0d5a43 !important;
+    color: #e0f3e9 !important;
+    box-shadow: 0 5px 12px rgba(13, 90, 67, .18);
+    font-size: .64rem;
+  }
+
+  #nk-home-search .nk-search-field select,
+  #nk-home-search .nk-search-guest-toggle {
+    width: 100%;
+    min-height: 37px;
+    display: flex;
+    align-items: center;
+    padding: 0 12px !important;
+    border: 0 !important;
+    border-radius: 12px !important;
+    background-color: rgba(255, 255, 255, .72) !important;
+    box-shadow: inset 0 0 0 1px rgba(19, 74, 54, .06), inset 0 1px 0 rgba(255, 255, 255, .98) !important;
+    color: #173128 !important;
+    font: 700 .84rem/1.2 'Plus Jakarta Sans', sans-serif !important;
+    outline: 0;
+  }
+
+  #nk-home-search .nk-search-field select {
+    appearance: none;
+    padding-right: 32px !important;
+    cursor: pointer;
+  }
+
+  #nk-home-search .nk-search-guest-field {
+    z-index: 12;
+  }
+
+  #nk-home-search .nk-search-guest-toggle {
+    justify-content: space-between;
+    gap: 8px;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  #nk-home-search .nk-search-guest-toggle i {
+    color: #789087 !important;
+    font-size: .64rem;
+  }
+
+  #nk-home-search .nk-search-date:hover,
+  #nk-home-search .nk-search-date:focus-visible,
+  #nk-home-search .nk-search-field select:focus-visible,
+  #nk-home-search .nk-search-guest-toggle:focus-visible {
+    background: #fff !important;
+    box-shadow: 0 0 0 3px rgba(29, 139, 97, .12), inset 0 0 0 1px rgba(29, 139, 97, .2) !important;
+    outline: 0;
+  }
+
+  #nk-home-search .nk-search-submit {
+    min-height: 92px !important;
+    margin: 0 !important;
+    padding: 0 18px !important;
+    border: 0 !important;
+    border-radius: 18px !important;
+    background: #0d5a43 !important;
+    color: #fff !important;
+    box-shadow: 0 12px 24px rgba(13, 90, 67, .2), inset 0 1px 0 rgba(255, 255, 255, .14) !important;
+    font: 800 .82rem/1.15 'Plus Jakarta Sans', sans-serif !important;
+    transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+  }
+
+  #nk-home-search .nk-search-submit:hover {
+    transform: translateY(-2px);
+    background: #0a4d3a !important;
+    box-shadow: 0 16px 30px rgba(13, 90, 67, .27), inset 0 1px 0 rgba(255, 255, 255, .16) !important;
+  }
+
+  #nk-home-search .nk-search-submit:focus-visible {
+    outline: 3px solid rgba(29, 139, 97, .25);
+    outline-offset: 3px;
+  }
+
+  #nk-home-search .nk-search-submit > i {
+    font-size: .92rem;
+  }
+
+  #nk-home-search .nk-search-guest-panel {
+    top: calc(100% + 10px);
+    padding: 13px 15px;
+    border: 0 !important;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 18px 45px rgba(9, 55, 40, .16), 0 0 0 1px rgba(19, 74, 54, .08);
+  }
+
+  #nk-home-search .nk-guest-stepper button {
+    border: 0 !important;
+    background: #eef6f1 !important;
+    box-shadow: inset 0 0 0 1px rgba(19, 74, 54, .08);
+  }
+
+  @media (max-width: 1080px) {
+    #nk-home-search .nk-search-fields {
+      grid-template-columns: minmax(250px, 1.35fr) repeat(3, minmax(145px, 1fr)) 142px !important;
+    }
+    #nk-home-search .nk-search-field { padding-inline: 13px !important; }
+  }
+
+  @media (max-width: 900px) {
+    #nk-home-search {
+      width: min(720px, calc(100% - 28px)) !important;
+      margin: -36px auto 28px !important;
+    }
+    #nk-home-search .nk-search-fields {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      gap: 9px !important;
+    }
+    #nk-home-search .nk-search-dates,
+    #nk-home-search .nk-search-guest-field,
+    #nk-home-search .nk-search-submit {
+      grid-column: 1 / -1 !important;
+    }
+    #nk-home-search .nk-search-submit {
+      min-height: 62px !important;
+      width: min(100%, 270px) !important;
+      justify-self: center;
+    }
+  }
+
+  @media (max-width: 560px) {
+    #nk-home-search {
+      width: calc(100% - 20px) !important;
+      margin: -24px auto 22px !important;
+    }
+    #nk-home-search .nk-home-search-card {
+      padding: 15px 12px 14px !important;
+      border-radius: 22px !important;
+    }
+    #nk-home-search .nk-search-heading {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 8px;
+      padding-inline: 3px !important;
+    }
+    #nk-home-search .nk-search-heading p { font-size: 1.03rem !important; }
+    #nk-home-search .nk-search-fields { gap: 8px !important; }
+    #nk-home-search .nk-search-field { min-height: 82px; border-radius: 15px !important; }
+    #nk-home-search .nk-search-dates { min-height: 86px; }
+    #nk-home-search .nk-search-date { padding-inline: 9px !important; }
+    #nk-home-search .nk-search-date strong { font-size: .72rem !important; }
+    #nk-home-search .nk-search-field select,
+    #nk-home-search .nk-search-guest-toggle { font-size: .75rem !important; }
+    #nk-home-search .nk-search-submit { min-height: 58px !important; border-radius: 15px !important; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #nk-home-search .nk-search-field,
+    #nk-home-search .nk-search-submit,
+    #nk-home-search .nk-search-date { transition: none; }
+  }
+</style>
 <style id="nauka-availability-audit-fixes">
   /* Keep the hero message comfortably below the header on every viewport. */
   #view-home > .nk-hero .nk-hero-quote { top:35% !important; }
@@ -1261,7 +1534,7 @@ Check your Browserslist config to be sure that your targets are set up correctly
   #nk-home-search .nk-search-field,
   #nk-home-search .nk-search-dates,
   #nk-home-search .nk-search-guest-field {
-    border: 2px solid #171717 !important;
+    border: 0 !important;
     background: rgba(255,255,255,.56) !important;
     box-shadow: none !important;
   }
@@ -1274,7 +1547,7 @@ Check your Browserslist config to be sure that your targets are set up correctly
     min-width: 136px !important;
     min-height: 56px !important;
     padding: 0 18px !important;
-    border: 2px solid #171717 !important;
+    border: 0 !important;
     border-radius: 14px !important;
     background: #0d4f3c !important;
     box-shadow: none !important;
@@ -16721,7 +16994,7 @@ body:has(#view-login.active){max-width:none!important;margin-left:0!important;ma
   /* Keep the search surface quiet: white fields, crisp black outlines and no
      competing gradients or glass effects. */
   #nk-home-search .nk-home-search-card {
-    border: 1px solid #171717 !important;
+    border: 0 !important;
     background: #fff !important;
     box-shadow: 0 12px 28px rgba(0,0,0,.08) !important;
     backdrop-filter: none !important;
@@ -16738,7 +17011,7 @@ body:has(#view-login.active){max-width:none!important;margin-left:0!important;ma
   #nk-home-search .nk-search-field:nth-child(2),
   #nk-home-search .nk-search-field:nth-child(3),
   #nk-home-search .nk-search-guest-field {
-    border: 1px solid #171717 !important;
+    border: 0 !important;
     border-radius: 14px !important;
     background: #fff !important;
     box-shadow: none !important;
@@ -16753,7 +17026,7 @@ body:has(#view-login.active){max-width:none!important;margin-left:0!important;ma
   #nk-home-search .nk-search-submit {
     min-height: 100%;
     margin: 0 !important;
-    border: 1px solid #171717 !important;
+    border: 0 !important;
     border-radius: 14px !important;
     background: #0d4f3c !important;
     box-shadow: none !important;
@@ -17022,3 +17295,135 @@ body:has(#view-login.active){max-width:none!important;margin-left:0!important;ma
   };
 })();
 </script>
+
+<style id="nauka-search-experience-redesign-final">
+  /* Final cascade: keeps the new search surface ahead of legacy outline rules. */
+  #nk-home-search .nk-home-search-card {
+    padding: 18px 18px 20px !important;
+    border: 0 !important;
+    border-radius: 28px !important;
+    background: rgba(255,255,255,.94) !important;
+    box-shadow: 0 24px 70px rgba(9,55,40,.14), 0 3px 12px rgba(9,55,40,.05), inset 0 1px 0 rgba(255,255,255,.96) !important;
+    backdrop-filter: blur(22px) saturate(125%) !important;
+    -webkit-backdrop-filter: blur(22px) saturate(125%) !important;
+  }
+
+  #nk-home-search .nk-search-heading { min-height: 27px; padding: 0 4px 13px !important; }
+  #nk-home-search .nk-search-kicker { color: #1d8b61 !important; font: 800 .63rem/1 'Plus Jakarta Sans',sans-serif !important; letter-spacing: .18em !important; }
+  #nk-home-search .nk-search-heading p { color: #10261d !important; font: 600 1.16rem/1 'Playfair Display',Georgia,serif !important; }
+
+  #nk-home-search .nk-search-fields {
+    display: grid !important;
+    grid-template-columns: minmax(270px,1.48fr) minmax(150px,.84fr) minmax(168px,.95fr) minmax(160px,.92fr) 154px !important;
+    gap: 8px !important;
+    overflow: visible !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+  }
+
+  #nk-home-search .nk-search-field {
+    min-width: 0;
+    min-height: 92px;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 17px !important;
+    border: 0 !important;
+    border-radius: 18px !important;
+    background: #f5f8f6 !important;
+    box-shadow: inset 0 0 0 1px rgba(19,74,54,.07), inset 0 1px 0 rgba(255,255,255,.96) !important;
+  }
+
+  #nk-home-search .nk-search-field:first-child,
+  #nk-home-search .nk-search-field:nth-child(2),
+  #nk-home-search .nk-search-field:nth-child(3),
+  #nk-home-search .nk-search-guest-field {
+    border: 0 !important;
+    border-radius: 18px !important;
+    background: #f5f8f6 !important;
+    box-shadow: inset 0 0 0 1px rgba(19,74,54,.07), inset 0 1px 0 rgba(255,255,255,.96) !important;
+  }
+
+  #nk-home-search .nk-search-field:first-child,
+  #nk-home-search .nk-search-dates {
+    background: #eef6f1 !important;
+    box-shadow: inset 0 0 0 1px rgba(29,139,97,.11), inset 0 1px 0 rgba(255,255,255,.98) !important;
+  }
+
+  #nk-home-search .nk-search-field:hover { background: #f0f6f2 !important; box-shadow: inset 0 0 0 1px rgba(29,139,97,.14), inset 0 1px 0 rgba(255,255,255,.98), 0 5px 15px rgba(11,73,51,.05) !important; }
+  #nk-home-search .nk-search-label { color: #84918b !important; font: 800 .59rem/1 'Plus Jakarta Sans',sans-serif !important; letter-spacing: .15em !important; }
+  #nk-home-search .nk-search-dates { padding: 11px !important; background: #eef6f1 !important; box-shadow: inset 0 0 0 1px rgba(29,139,97,.11), inset 0 1px 0 rgba(255,255,255,.98) !important; }
+  #nk-home-search .nk-search-date-pair { min-width: 0; gap: 7px; }
+  #nk-home-search .nk-search-date { gap: 4px; padding: 9px 11px !important; border: 0 !important; border-radius: 12px !important; background: rgba(255,255,255,.78) !important; box-shadow: inset 0 0 0 1px rgba(19,74,54,.06), inset 0 1px 0 rgba(255,255,255,.98) !important; }
+  #nk-home-search .nk-search-date small { color: #87958e !important; font: 500 .63rem/1 'Plus Jakarta Sans',sans-serif !important; }
+  #nk-home-search .nk-search-date strong { color: #173128 !important; font: 700 .82rem/1.2 'Plus Jakarta Sans',sans-serif !important; }
+  #nk-home-search .nk-search-date-arrow { width: 24px; height: 24px; display: grid; flex: 0 0 24px; place-items: center; border-radius: 50%; background: #0d5a43 !important; color: #e0f3e9 !important; box-shadow: 0 5px 12px rgba(13,90,67,.18); font-size: .64rem; }
+
+  #nk-home-search .nk-search-field select,
+  #nk-home-search .nk-search-guest-toggle {
+    width: 100%;
+    min-height: 37px;
+    display: flex;
+    align-items: center;
+    padding: 0 12px !important;
+    border: 0 !important;
+    border-radius: 12px !important;
+    background-color: rgba(255,255,255,.72) !important;
+    box-shadow: inset 0 0 0 1px rgba(19,74,54,.06), inset 0 1px 0 rgba(255,255,255,.98) !important;
+    color: #173128 !important;
+    font: 700 .84rem/1.2 'Plus Jakarta Sans',sans-serif !important;
+    outline: 0;
+  }
+  #nk-home-search .nk-search-field select { appearance: none; padding-right: 32px !important; cursor: pointer; }
+  #nk-home-search .nk-search-guest-field { z-index: 12; }
+  #nk-home-search .nk-search-guest-toggle { justify-content: space-between; gap: 8px; text-align: left; cursor: pointer; }
+  #nk-home-search .nk-search-guest-toggle i { color: #789087 !important; font-size: .64rem; }
+  #nk-home-search .nk-search-date:hover,
+  #nk-home-search .nk-search-date:focus-visible,
+  #nk-home-search .nk-search-field select:focus-visible,
+  #nk-home-search .nk-search-guest-toggle:focus-visible { background: #fff !important; box-shadow: 0 0 0 3px rgba(29,139,97,.12), inset 0 0 0 1px rgba(29,139,97,.2) !important; outline: 0; }
+
+  #nk-home-search .nk-search-submit {
+    min-height: 92px !important;
+    margin: 0 !important;
+    padding: 0 18px !important;
+    border: 0 !important;
+    border-radius: 18px !important;
+    background: #0d5a43 !important;
+    color: #fff !important;
+    box-shadow: 0 12px 24px rgba(13,90,67,.2), inset 0 1px 0 rgba(255,255,255,.14) !important;
+    font: 800 .82rem/1.15 'Plus Jakarta Sans',sans-serif !important;
+  }
+  #nk-home-search .nk-search-submit:hover { transform: translateY(-2px); background: #0a4d3a !important; box-shadow: 0 16px 30px rgba(13,90,67,.27), inset 0 1px 0 rgba(255,255,255,.16) !important; }
+  #nk-home-search .nk-search-submit:focus-visible { outline: 3px solid rgba(29,139,97,.25); outline-offset: 3px; }
+  #nk-home-search .nk-search-submit > i { font-size: .92rem; }
+  #nk-home-search .nk-search-guest-panel { top: calc(100% + 10px); padding: 13px 15px; border: 0 !important; border-radius: 16px; background: #fff; box-shadow: 0 18px 45px rgba(9,55,40,.16), 0 0 0 1px rgba(19,74,54,.08); }
+  #nk-home-search .nk-guest-stepper button { border: 0 !important; background: #eef6f1 !important; box-shadow: inset 0 0 0 1px rgba(19,74,54,.08); }
+
+  @media (max-width: 1080px) {
+    #nk-home-search .nk-search-fields { grid-template-columns: minmax(250px,1.35fr) repeat(3,minmax(145px,1fr)) 142px !important; }
+    #nk-home-search .nk-search-field { padding-inline: 13px !important; }
+  }
+  @media (max-width: 900px) {
+    #nk-home-search { width: min(720px,calc(100% - 28px)) !important; margin: -36px auto 28px !important; }
+    #nk-home-search .nk-search-fields { grid-template-columns: repeat(2,minmax(0,1fr)) !important; gap: 9px !important; }
+    #nk-home-search .nk-search-dates,
+    #nk-home-search .nk-search-guest-field,
+    #nk-home-search .nk-search-submit { grid-column: 1 / -1 !important; }
+    #nk-home-search .nk-search-submit { min-height: 62px !important; width: min(100%,270px) !important; justify-self: center; }
+  }
+  @media (max-width: 560px) {
+    #nk-home-search { width: calc(100% - 20px) !important; margin: -24px auto 22px !important; }
+    #nk-home-search .nk-home-search-card { padding: 15px 12px 14px !important; border-radius: 22px !important; }
+    #nk-home-search .nk-search-heading { align-items: flex-start; flex-direction: column; gap: 8px; padding-inline: 3px !important; }
+    #nk-home-search .nk-search-heading p { font-size: 1.03rem !important; }
+    #nk-home-search .nk-search-fields { gap: 8px !important; }
+    #nk-home-search .nk-search-field { min-height: 82px; border-radius: 15px !important; }
+    #nk-home-search .nk-search-dates { min-height: 86px; }
+    #nk-home-search .nk-search-date { padding-inline: 9px !important; }
+    #nk-home-search .nk-search-date strong { font-size: .72rem !important; }
+    #nk-home-search .nk-search-field select,
+    #nk-home-search .nk-search-guest-toggle { font-size: .75rem !important; }
+    #nk-home-search .nk-search-submit { min-height: 58px !important; border-radius: 15px !important; }
+  }
+</style>
