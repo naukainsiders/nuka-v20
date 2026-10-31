@@ -5192,7 +5192,7 @@ function openBookingModal() {
 }
 
 function closeBookingModal() {
-  document.getElementById('bookingModal').classList.remove('open');
+  document.getElementById('bookingModal')?.classList.remove('open');
   document.body.style.overflow = '';
 }
 
@@ -16458,3 +16458,21 @@ body:has(#view-login.active){max-width:none!important;margin-left:0!important;ma
     #nk-home-search .nk-search-field { padding-inline: 9px!important; }
   }
 </style>
+<script id="nauka-retire-legacy-auth-sheets">
+  /* Guest availability no longer uses the old sign-in sheets. Remove the
+     retired DOM nodes so they cannot reappear after a route change or remain
+     exposed as stale dialogs to mobile assistive technology. */
+  (function () {
+    var legacyAuthIds = ['auth-sheet-backdrop', 'auth-sheet', 'auth-gate-backdrop', 'auth-gate-sheet'];
+    function removeLegacyAuthSheets() {
+      legacyAuthIds.forEach(function (id) {
+        document.getElementById(id)?.remove();
+      });
+      document.body.style.overflow = '';
+    }
+    removeLegacyAuthSheets();
+    window.showAuthSheet = function () { return false; };
+    window.closeAuthSheet = removeLegacyAuthSheets;
+    window.closeAuthGate = removeLegacyAuthSheets;
+  })();
+</script>
