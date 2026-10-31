@@ -1562,14 +1562,14 @@ Check your Browserslist config to be sure that your targets are set up correctly
   #view-home .nk-home-toolbar-brand {
     width: 48px !important;
     height: 48px !important;
-    padding: 4px !important;
+    padding: 0 !important;
     border-radius: 50% !important;
     overflow: hidden !important;
-    background: rgba(255,255,255,.9) !important;
-    border: 1px solid rgba(255,255,255,.72) !important;
-    box-shadow: 0 8px 22px rgba(5,42,31,.2), inset 0 1px 0 rgba(255,255,255,.9) !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
   }
-  #view-home .nk-home-toolbar-brand img { width: 100% !important; height: 100% !important; border-radius: 50% !important; object-fit: cover !important; }
+  #view-home .nk-home-toolbar-brand img { width: 100% !important; height: 100% !important; border-radius: 0 !important; object-fit: contain !important; object-position: center !important; }
 
   /* Admin fleet header and action pages. */
   #nka-admin-root .nka-fleet-heading { flex-direction: column !important; align-items: stretch !important; gap: 7px !important; }
