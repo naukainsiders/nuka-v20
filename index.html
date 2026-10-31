@@ -1655,7 +1655,10 @@ Check your Browserslist config to be sure that your targets are set up correctly
     }
     var fleetTitle = Array.from(admin.querySelectorAll('h2')).find(function (node) { return node.textContent.trim() === 'House boat fleet' || node.textContent.trim() === 'Manage Fleet'; });
     if (fleetTitle) {
-      fleetTitle.textContent = 'Manage Fleet';
+      /* MutationObserver below calls this normalizer after every render. Do
+         not rewrite an identical text node or the observer will trigger
+         itself forever and freeze every fleet/revenue control. */
+      if (fleetTitle.textContent.trim() !== 'Manage Fleet') fleetTitle.textContent = 'Manage Fleet';
       var header = fleetTitle.closest('.flex.items-end.justify-between.gap-3');
       if (header) {
         header.classList.add('nka-fleet-heading');
@@ -13439,9 +13442,18 @@ document.addEventListener('DOMContentLoaded', function () {
         </div>
       </header>
       <nav class="nka-nav" aria-label="Admin sections">
-        ${[['overview','Overview','fa-gauge-high'],['fleet','Manage Fleet','fa-ship'],['bookings','Bookings','fa-calendar-check'],['revenue','Revenue','fa-chart-line'],['settings','Settings','fa-gear']].map(([key,label,icon]) => `<button class="nka-tab ${key===tab?'on':''}" onclick="window.AD.go('${key}')"><i class="fa-solid ${icon} mr-1.5"></i>${label}</button>`).join('')}
+        ${[['overview','Overview','fa-gauge-high'],['fleet','Manage Fleet','fa-ship'],['bookings','Bookings','fa-calendar-check'],['revenue','Revenue','fa-chart-line'],['settings','Settings','fa-gear']].map(([key,label,icon]) => `<button type="button" class="nka-tab ${key===tab?'on':''}" data-nka-admin-tab="${key}"><i class="fa-solid ${icon} mr-1.5"></i>${label}</button>`).join('')}
       </nav>
       <main id="nka-admin-body" class="nka-body"></main>`;
+    if (!root.__nkaAdminNavBound) {
+      root.addEventListener('click', event => {
+        const button = event.target.closest?.('[data-nka-admin-tab]');
+        if (!button || !root.contains(button)) return;
+        event.preventDefault();
+        window.nkaAdminNavigate?.(button.dataset.nkaAdminTab);
+      });
+      root.__nkaAdminNavBound = true;
+    }
     return root;
   }
 
@@ -13509,7 +13521,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const suspended = fleetRows.filter(row => row.status === 'suspended').length;
     return `<div class="flex items-end justify-between gap-3 mb-4"><div><p class="nka-label">Live overview</p><h2 class="nka-title mt-1">Platform at a glance</h2></div><span class="nka-status active">Admin managed</span></div>
       <div class="grid grid-cols-2 gap-3 mb-4"><div class="nka-stat"><span class="nka-label">Active boats</span><strong>${active}</strong><span class="nka-muted">${suspended} suspended</span></div><div class="nka-stat"><span class="nka-label">Bookings</span><strong>${bookingRows.length}</strong><span class="nka-muted">${pending} awaiting decision</span></div><div class="nka-stat"><span class="nka-label">Advance revenue</span><strong>${money(collected)}</strong><span class="nka-muted">${advancesRecorded} manually marked paid</span></div><div class="nka-stat"><span class="nka-label">Pending decisions</span><strong>${pending}</strong><span class="nka-muted">Awaiting accept or decline</span></div></div>
-      <div class="nka-card p-4"><div class="flex items-center justify-between gap-3 mb-3"><p class="nka-title" style="font-size:15px">Recent activity</p><button class="nka-btn nka-btn-soft" onclick="window.AD.go('bookings')">All bookings</button></div>${bookingRows.slice(0,5).map(row => `<div class="py-3 border-t border-gray-100"><div class="flex items-center justify-between gap-2"><p class="text-xs font-bold font-body text-ink truncate">${esc(row.guest_name || 'Guest')} · ${esc(row.property_name || 'House boat')}</p><span class="nka-status ${statusClass(row.status)}">${esc(row.status || 'pending')}</span></div><p class="nka-muted mt-1">${esc(row.id)} · ${fmtDate(row.created_at)}</p></div>`).join('') || '<p class="nka-muted py-4">No bookings yet.</p>'}</div>`;
+      <div class="nka-card p-4"><div class="flex items-center justify-between gap-3 mb-3"><p class="nka-title" style="font-size:15px">Recent activity</p><button type="button" class="nka-btn nka-btn-soft" onclick="window.nkaAdminNavigate('bookings'); return false;">All bookings</button></div>${bookingRows.slice(0,5).map(row => `<div class="py-3 border-t border-gray-100"><div class="flex items-center justify-between gap-2"><p class="text-xs font-bold font-body text-ink truncate">${esc(row.guest_name || 'Guest')} · ${esc(row.property_name || 'House boat')}</p><span class="nka-status ${statusClass(row.status)}">${esc(row.status || 'pending')}</span></div><p class="nka-muted mt-1">${esc(row.id)} · ${fmtDate(row.created_at)}</p></div>`).join('') || '<p class="nka-muted py-4">No bookings yet.</p>'}</div>`;
   }
 
   function fleetCard(row) {
@@ -13575,6 +13587,20 @@ document.addEventListener('DOMContentLoaded', function () {
     body.innerHTML = tab === 'fleet' ? fleetHtml() : tab === 'bookings' ? bookingsHtml() : tab === 'revenue' ? revenueHtml() : tab === 'settings' ? settingsHtml() : overviewHtml();
     if (window.lucide) window.lucide.createIcons();
   }
+
+  const ADMIN_TABS = ['overview', 'fleet', 'bookings', 'revenue', 'settings'];
+  function navigateAdmin(tab = 'overview') {
+    const nextTab = ADMIN_TABS.includes(tab) ? tab : 'overview';
+    if (window.AD) window.AD.t = nextTab;
+    renderAdminBody(nextTab);
+    void reloadAdmin(nextTab);
+    window.scrollTo(0, 0);
+    return nextTab;
+  }
+  /* Public bridge used by the tab buttons and by legacy entry points.  The
+     old console exposed AD.go directly; keeping one guarded bridge prevents
+     late script order or a stale inline handler from making tabs inert. */
+  window.nkaAdminNavigate = navigateAdmin;
 
   async function reloadAdmin(tab = window.AD?.t || 'overview', force = false) {
     const requestedTab = tab;
@@ -13986,15 +14012,8 @@ document.addEventListener('DOMContentLoaded', function () {
     renderAdminBody('settings');
   };
 
-  const originalAdminGo = window.AD?.go;
   if (window.AD) {
-    window.AD.go = function (tab = 'overview') {
-      const allowed = ['overview','fleet','bookings','revenue','settings'];
-      this.t = allowed.includes(tab) ? tab : 'overview';
-      renderAdminBody(this.t);
-      if (this.t === 'overview' || !fleetRows.length && this.t === 'fleet') void reloadAdmin(this.t);
-      window.scrollTo(0, 0);
-    };
+    window.AD.go = navigateAdmin;
     window.AD.t = 'overview';
   }
 
@@ -14037,20 +14056,8 @@ document.addEventListener('DOMContentLoaded', function () {
   function boot() {
     ensureDefaultCommission();
     if (window.AD) {
-      const oldGo = window.AD.go;
-      window.AD.go = function (tab = 'overview') {
-        const result = oldGo.call(this, tab);
-        if (this.t === 'operators' || this.t === 'applications') this.t = 'fleet';
-        return result;
-      };
-      // Re-apply the admin-managed implementation after the legacy console's first render.
-      const current = window.AD.go;
-      window.AD.go = function (tab = 'overview') {
-        const allowed = ['overview','fleet','bookings','revenue','settings'];
-        this.t = allowed.includes(tab) ? tab : 'overview';
-        renderAdminBody(this.t);
-        void reloadAdmin(this.t);
-      };
+      // Re-apply the bridge after the legacy console's first render.
+      window.AD.go = navigateAdmin;
       window.AD.t = 'overview';
     }
   }
