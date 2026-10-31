@@ -17439,6 +17439,23 @@ body:has(#view-login.active){max-width:none!important;margin-left:0!important;ma
   (function () {
     'use strict';
 
+    /* The retired booking sheet no longer owns the shared date inputs, but
+       the landing calendar and availability search still use those ids as
+       their state boundary. Keep one hidden pair on the home search so a
+       date selected before a boat is chosen is stored instead of discarded. */
+    function ensureLandingDateInputs() {
+      var home = document.getElementById('nk-home-search');
+      if (!home) return;
+      ['booking-date', 'booking-checkout'].forEach(function (id) {
+        if (document.getElementById(id)) return;
+        var input = document.createElement('input');
+        input.type = 'hidden';
+        input.id = id;
+        input.dataset.nkLandingDate = 'true';
+        home.appendChild(input);
+      });
+    }
+
     function formatDate(value) {
       if (!/^\d{4}-\d{2}-\d{2}$/.test(String(value || ''))) return 'Choose date';
       var parts = String(value).split('-').map(Number);
@@ -17487,6 +17504,7 @@ body:has(#view-login.active){max-width:none!important;margin-left:0!important;ma
       if (event.target?.id === 'booking-date' || event.target?.id === 'booking-checkout') syncSearchDateLabels();
     }, true);
     window.nkSyncSearchDateLabels = syncSearchDateLabels;
+    ensureLandingDateInputs();
     syncSearchDateLabels();
   })();
 </script>
