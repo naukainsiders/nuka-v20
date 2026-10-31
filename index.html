@@ -2796,21 +2796,6 @@ body:has(#auth-gate-sheet.open) #customer-bottom-nav{opacity:0!important;visibil
       </div>
     </section>
 
-    <!-- WHY CHOOSE NAUKA -->
-    <section id="nk-why-nauka" class="nk-why-nauka">
-      <div class="nk-feature-heading">
-        <div class="nk-section-kicker">The Nauka difference</div>
-        <h2>Why choose <em>Nauka?</em></h2>
-        <p>Discover the backwaters with a local team that makes each step feel considered, clear, and easy.</p>
-      </div>
-      <div class="nk-why-grid">
-        <article class="nk-why-card"><span class="nk-why-icon mint"><i class="fa-solid fa-compass"></i></span><h3>Local expertise</h3><p>Plan your Alleppey stay with a team that knows these waterways.</p></article>
-        <article class="nk-why-card"><span class="nk-why-icon peach"><i class="fa-solid fa-utensils"></i></span><h3>Kerala hospitality</h3><p>Explore boat options with local meals and thoughtful onboard service.</p></article>
-        <article class="nk-why-card"><span class="nk-why-icon blue"><i class="fa-solid fa-bed"></i></span><h3>Stays for your group</h3><p>Compare houseboats and private room stays to find your fit.</p></article>
-        <article class="nk-why-card"><span class="nk-why-icon aqua"><i class="fa-solid fa-receipt"></i></span><h3>Clear trip details</h3><p>Review the boat, amenities, dates, and pricing before confirming.</p></article>
-        <article class="nk-why-card"><span class="nk-why-icon rose"><i class="fa-solid fa-comments"></i></span><h3>Local guest support</h3><p>Reach the Nauka team for help before your trip and at check-in.</p></article>
-      </div>
-    </section>
 
     <!-- FAQ SECTION: 8 CURATED QUESTIONS -->
     <section class="nk-review-section" id="nk-home-reviews"><div class="nk-review-heading text-center mb-5"><div class="nk-section-kicker">Guest notes</div><h2 class="text-2xl sm:text-3xl font-serif font-bold text-navy mt-4">Loved on Google</h2><p class="text-slate-600 text-xs sm:text-sm mt-2">Real words from travellers who stayed with us.</p></div><div class="max-w-md mx-auto my-3 px-6 py-8 text-center bg-white/80 backdrop-blur-md rounded-3xl border border-emerald/10 shadow-sm"><div class="w-14 h-14 rounded-2xl bg-emerald-mist text-emerald flex items-center justify-center mx-auto mb-3 text-xl shadow-inner"><i class="fa-solid fa-star"></i></div><h3 class="font-display text-xl text-ink font-semibold">No reviews yet</h3><p class="text-slate-500 text-xs mt-1.5 mb-5 leading-relaxed">Be the first to share your backwater experience and get featured right here.</p><button type="button" onclick="openAddReviewModal()" class="btn-emerald text-white text-xs font-bold px-5 py-3 rounded-2xl shadow-emerald inline-flex items-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition"><i class="fa-solid fa-pen-to-square"></i><span>Write the First Review</span></button></div></section><div id="faq" class="nk-faq max-w-3xl mx-auto" data-nk-done="1">
@@ -16295,5 +16280,14 @@ body:has(#view-login.active){max-width:none!important;margin-left:0!important;ma
   }
   window.addEventListener('pageshow',function(){setTimeout(rerenderPersistedFleet,0)});
   window.addEventListener('popstate',function(){setTimeout(rerenderPersistedFleet,0)});
+})();
+</script>
+<script id="nauka-remove-why-section">
+(function(){
+  function removeWhyNauka(){
+    document.querySelectorAll('#nk-why-nauka').forEach(function(section){section.remove()});
+  }
+  removeWhyNauka();
+  if(window.MutationObserver&&document.body)new MutationObserver(removeWhyNauka).observe(document.body,{childList:true,subtree:true});
 })();
 </script>
