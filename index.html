@@ -9019,9 +9019,14 @@ document.addEventListener('visibilitychange',chk);window.addEventListener('focus
     const rpc=window.naukaSupabase;
     if(!d||!rpc?.rpc){window.nkCalAvailabilityLoading=false;window.nkCalBlocked=new Set();paintCalendar();return}
     const y=d.getFullYear(),m=d.getMonth(),from=y+'-'+String(m+1).padStart(2,'0')+'-01',to=y+'-'+String(m+1).padStart(2,'0')+'-'+String(new Date(y,m+1,0).getDate()).padStart(2,'0');
-    const requestKey=String(prop?.id||'home')+'|'+from+'|'+to;
+    const selectedMode=document.getElementById('nk-search-experience')?.value||window.nkBookingMode||window.nkCruiseMode||'night';
+    const selectedType=document.getElementById('nk-search-boat-type')?.value||'all';
+    const selectedGuests=(Number(document.getElementById('nk-search-adults')?.textContent||2)+Number(document.getElementById('nk-search-children')?.textContent||0));
+    const requestKey=String(prop?.id||'home')+'|'+from+'|'+to+'|'+selectedMode+'|'+selectedType+'|'+selectedGuests;
     window.nkCalendarRequestKey=requestKey;
-    window.nkCalAvailabilityLoading=true;window.nkCalBlocked=new Set();paintCalendar();
+    window.nkCalAvailabilityLoading=true;
+    if(window.nkCalendarDataKey!==requestKey)window.nkCalBlocked=new Set();
+    paintCalendar();
     let blocked=new Set(),error=null;
     if(prop?.id){
       const result=await getBlockedDates(prop.id,from,to,window.nkBookingMode||window.nkCruiseMode||'night');blocked=result.dates;error=result.error;
@@ -9041,8 +9046,10 @@ document.addEventListener('visibilitychange',chk);window.addEventListener('focus
     }
     if(window.nkCalendarRequestKey!==requestKey)return;
     window.nkCalAvailabilityLoading=false;
+    window.nkCalAvailabilityError=error;
     if(error)console.warn('Nauka availability lookup failed:',error.message||error);
     window.nkCalBlocked=blocked;
+    window.nkCalendarDataKey=requestKey;
     paintCalendar();
   }
   window.showCalendar=showCalendar;window.calendarMonth=calendarMonth;window.pickCalendarDate=pickCalendarDate;
@@ -9196,6 +9203,13 @@ document.addEventListener('visibilitychange',chk);window.addEventListener('focus
   };
   showCalendar=function(){
     const p=document.getElementById('nk-calendar-pop');if(!p)return;
+    /* The document contains a legacy hidden calendar snapshot for first paint.
+       Always initialise live calendar state before rendering so that snapshot
+       never controls the landing-page picker. */
+    if(!(window.nkCalDate instanceof Date)||Number.isNaN(window.nkCalDate.getTime())){window.nkCalDate=new Date();window.nkCalDate.setDate(1)}
+    if(!(window.nkCalBlocked instanceof Set))window.nkCalBlocked=new Set();
+    if(!window.nkCalSelecting)window.nkCalSelecting=document.getElementById('booking-date')?.value?'out':'in';
+    window.nkCalAvailabilityLoading=false;window.nkCalAvailabilityError=null;
     ensureCalendarSummary();ensureCalendarBackdrop();
     p.classList.add('open');document.getElementById('nk-calendar-backdrop')?.classList.add('open');
     p.style.left='50%';p.style.top='50%';p.style.transform='translate(-50%,-50%)';p.style.animation='none';
@@ -9212,9 +9226,12 @@ document.addEventListener('visibilitychange',chk);window.addEventListener('focus
     for(let day=1;day<=days;day++){
       const iso=y+'-'+String(m+1).padStart(2,'0')+'-'+String(day).padStart(2,'0'),past=iso<today,occupied=window.nkCalBlocked?.has(iso)&&!past,beforeStart=selectingOut&&iso<=start,inRange=!!(start&&end&&iso>start&&iso<end),rangeStart=iso===start,rangeEnd=iso===end;
       const classes='nk-cal-day'+(iso===today?' today':'')+(rangeStart?' range-start':'')+(rangeEnd?' range-end':'')+(inRange?' in-range':'')+(occupied?' occupied':'')+((past||beforeStart)?' disabled':'');
-      html+='<button type="button" class="'+classes+'"'+(past||beforeStart||occupied?' disabled':'')+(occupied?' aria-label="Booked date '+day+'"':'')+' onclick="pickCalendarDate(&quot;'+iso+'&quot;,'+(occupied?'true':'false')+')">'+day+'</button>';
+      html+='<button type="button" class="'+classes+'" data-iso="'+iso+'" aria-label="'+(occupied?'Booked date ':'Choose ')+(iso===today?'today, ':'')+day+'"'+(past||beforeStart||occupied?' disabled':'')+' onclick="pickCalendarDate(&quot;'+iso+'&quot;,'+(occupied?'true':'false')+')">'+day+'</button>';
     }
-    grid.innerHTML=html;updateCalendarSummary();
+    grid.innerHTML=html;
+    grid.classList.toggle('nk-availability-checking',!!window.nkCalAvailabilityLoading);
+    grid.setAttribute('aria-busy',String(!!window.nkCalAvailabilityLoading));
+    updateCalendarSummary();
   };
   window.paintCalendar=paintCalendar;
   updateCalendarSummary=function(){
@@ -9224,6 +9241,10 @@ document.addEventListener('visibilitychange',chk);window.addEventListener('focus
     dayEl.textContent=start?(end&&!nkIsDayBooking()?String(startDate.getDate())+' → '+String(endDate.getDate()):String(startDate.getDate())):'—';
     monthEl.textContent=!start?'Select a check-in date':nkIsDayBooking()?startDate.toLocaleDateString('en-US',{month:'long',year:'numeric'})+' · same-day cruise':!end?'Select a check-out date':startDate.toLocaleDateString('en-US',{month:'short'})+' → '+endDate.toLocaleDateString('en-US',{month:'short',year:'numeric'});
   };
+  function syncLandingDateSelection(){
+    if(typeof syncHomeSearchDates==='function')syncHomeSearchDates();
+    if(typeof saveLandingPreferences==='function')saveLandingPreferences();
+  }
   pickCalendarDate=async function(iso,occupied){
     if(occupied){closeCalendar();nkBookingDateError('Sorry, that date is already booked. Please choose another date.');return}
     if(iso<todayISO()){nkBookingDateError('Please choose a date from today onward.');return}
@@ -9232,15 +9253,15 @@ document.addEventListener('visibilitychange',chk);window.addEventListener('focus
       if(startInput)startInput.value=iso;
       if(nkIsDayBooking()){
         if(endInput)endInput.value=iso;
-        window.nkCalSelecting='in';nkSyncBookingDateRange();closeCalendar();return;
+        window.nkCalSelecting='in';nkSyncBookingDateRange();syncLandingDateSelection();closeCalendar();return;
       }
       if(endInput)endInput.value='';
-      window.nkCalSelecting='out';nkSyncBookingDateRange();paintCalendar();return;
+      window.nkCalSelecting='out';nkSyncBookingDateRange();syncLandingDateSelection();paintCalendar();return;
     }
     if(nkIsDayBooking()){
       if(iso!==start)return nkBookingDateError('A Day Cruise must have the same check-in and check-out date.');
       if(endInput)endInput.value=iso;
-      nkSyncBookingDateRange();closeCalendar();return;
+      nkSyncBookingDateRange();syncLandingDateSelection();closeCalendar();return;
     }
     if(iso<=start)return nkBookingDateError('Please choose a check-out date after your check-in date.');
     const lastStayDate=addDaysISO(iso,-1);
@@ -9255,7 +9276,7 @@ document.addEventListener('visibilitychange',chk);window.addEventListener('focus
       if(result.error)return nkBookingDateError('We could not verify live availability. Please try again.');
     }
     if(endInput)endInput.value=iso;
-    window.nkCalSelecting='out';nkSyncBookingDateRange();closeCalendar();
+    window.nkCalSelecting='out';nkSyncBookingDateRange();syncLandingDateSelection();closeCalendar();
   };
   window.pickCalendarDate=pickCalendarDate;
 
@@ -16307,6 +16328,21 @@ body:has(#view-login.active){max-width:none!important;margin-left:0!important;ma
   if(window.MutationObserver&&document.body)new MutationObserver(removeWhyNauka).observe(document.body,{childList:true,subtree:true});
 })();
 </script>
+<style id="nauka-landing-calendar-interaction-fix">
+  /* Available landing dates must look and behave like available dates. The
+     reference palette previously made them as pale as disabled dates. */
+  #nk-calendar-pop .nk-cal-day:not(.disabled):not(.occupied):not(.today):not(.selected):not(.range-start):not(.range-end):not(.in-range) {
+    color:#53665d!important; opacity:1!important; cursor:pointer!important; pointer-events:auto!important;
+  }
+  #nk-calendar-pop .nk-cal-day.disabled {
+    color:#c6c8ca!important; opacity:.25!important; cursor:not-allowed!important; pointer-events:none!important;
+  }
+  #nk-calendar-pop .nk-cal-day:not(.disabled):not(.occupied) { touch-action:manipulation; }
+  #nk-calendar-pop .nk-cal-grid.nk-availability-checking .nk-cal-day:not(.disabled):not(.occupied) {
+    opacity:.78!important; cursor:pointer!important; pointer-events:auto!important;
+  }
+  #nk-calendar-pop .nk-cal-day:focus-visible { outline:3px solid rgba(13,79,60,.28)!important; outline-offset:2px; }
+</style>
 <style id="nauka-day-cruise-date-lock">
   #nkt .nkt-dates { display:grid !important; }
   #nkt .nkt-cell { position:relative; overflow:hidden; }
